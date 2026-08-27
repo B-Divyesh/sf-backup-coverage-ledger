@@ -1,0 +1,8 @@
+{
+  "title": "Proof lattice",
+  "use_case": "stylized-concept",
+  "model": "factory-image Azure deployment",
+  "generated_on": "2026-08-27",
+  "prompt": "Use case: stylized-concept. Asset type: editorial hero illustration for an offline backup coverage utility. Primary request: an abstract proof lattice assembled from precise geometric disks, hollow rings, archival folders, and three connected vault-like planes; some connections are complete and one visibly stops before its target, expressing known coverage and a restore-proof gap. Scene/backdrop: warm uncoated ledger paper with a subtle square registration grid. Style/medium: tactile cut-paper geometry mixed with crisp technical ink plotting, restrained risograph misregistration, no photorealism. Composition/framing: wide landscape, main lattice centered-right with generous calm negative space, readable at small size, no interface screenshot. Lighting/mood: flat overcast studio light, methodical, trustworthy, quietly urgent. Color palette: parchment, green-black ink, cobalt blue, proof green, sparing vermilion. Materials/textures: fibrous paper, thin ink rules, small punched circles. Constraints: entirely abstract, no people, no text, no numbers, no logos, no watermark, no brands, no padlock cliché, no clouds, no gradients, no glowing neon, no fake UI.",
+  "review": "Accepted after full-resolution review: no text or watermark, no logos or unintended brands, clean folder silhouettes, deliberate stopped vermilion connection, coherent parchment/cobalt/green palette, no visible seams."
+}
