@@ -1,0 +1,12 @@
+{
+  "slug": "backup-coverage-ledger",
+  "title": "Backup Coverage Ledger",
+  "territory": "utilities",
+  "user": "A small-team operator who needs to know which critical data sets are covered, by which backup, and whether the backup can actually be extracted.",
+  "smallest_useful_product": "Offline/shared YAML-or-CSV ledger with asset records, backup targets, last proof date, recovery instructions, expiry alerts, and a printable restore drill checklist.",
+  "success_measure": "90% of listed critical assets have an owner, recovery location, and a recorded restore proof within 30 days.",
+  "artifact_class": "static-web",
+  "monetization": "free",
+  "constraints": "Local-first data, no secret material, exportable plain files, and clear disclaimer that a record is not a successful restore.",
+  "non_goals": ["Performing backups", "Storing credentials", "Claiming that documentation is restore proof"]
+}
