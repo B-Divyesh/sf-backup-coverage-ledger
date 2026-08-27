@@ -162,12 +162,12 @@ function recordRow(record: LedgerRecord): string {
   else if (status === 'expired') statusDetail = record.lastProofDate ? `${daysSince(record.lastProofDate)} days since proof` : '';
   else if (status === 'due') statusDetail = `Expires ${formatDate(expiry)}`;
   else statusDetail = `${daysSince(record.lastProofDate)} days since proof`;
-  return `<article class="record" data-record-id="${record.id}">
+  return `<article class="record" data-record-id="${escapeHtml(record.id)}">
     <div class="record-primary"><span class="criticality criticality--${record.criticality}">${escapeHtml(record.criticality)}</span><h3>${escapeHtml(record.asset)}</h3><p>Owner · ${escapeHtml(record.owner || 'Not assigned')}</p></div>
     <div class="record-path"><span>Backup target</span><strong>${escapeHtml(record.backupTarget || 'Not recorded')}</strong><small>${escapeHtml(record.recoveryLocation || 'Recovery location missing')}</small></div>
     <div class="record-path"><span>Extraction</span><strong>${escapeHtml(record.extractionMethod || 'Not recorded')}</strong><small>${record.retention ? `Retention · ${escapeHtml(record.retention)}` : 'Retention not recorded'}</small></div>
-    <div class="record-proof"><span class="status status--${status}"><i aria-hidden="true"></i>${STATUS_LABELS[status]}</span><small>${escapeHtml(statusDetail)}</small><button type="button" class="text-button" data-action="proof" data-id="${record.id}">Record restore proof</button></div>
-    <div class="record-actions"><button class="icon-button" type="button" data-action="edit" data-id="${record.id}" aria-label="Edit ${escapeHtml(record.asset)}">${icon('edit')}</button><button class="icon-button icon-button--danger" type="button" data-action="delete" data-id="${record.id}" aria-label="Delete ${escapeHtml(record.asset)}">${icon('trash')}</button></div>
+    <div class="record-proof"><span class="status status--${status}"><i aria-hidden="true"></i>${STATUS_LABELS[status]}</span><small>${escapeHtml(statusDetail)}</small><button type="button" class="text-button" data-action="proof" data-id="${escapeHtml(record.id)}">Record restore proof</button></div>
+    <div class="record-actions"><button class="icon-button" type="button" data-action="edit" data-id="${escapeHtml(record.id)}" aria-label="Edit ${escapeHtml(record.asset)}">${icon('edit')}</button><button class="icon-button icon-button--danger" type="button" data-action="delete" data-id="${escapeHtml(record.id)}" aria-label="Delete ${escapeHtml(record.asset)}">${icon('trash')}</button></div>
   </article>`;
 }
 

@@ -14,7 +14,7 @@ export function createRecord(input: Partial<LedgerRecord> = {}): LedgerRecord {
     id: input.id || crypto.randomUUID(),
     asset: input.asset?.trim() || '',
     owner: input.owner?.trim() || '',
-    criticality: input.criticality || 'critical',
+    criticality: validCriticality(input.criticality),
     backupTarget: input.backupTarget?.trim() || '',
     recoveryLocation: input.recoveryLocation?.trim() || '',
     retention: input.retention?.trim() || '',
@@ -25,6 +25,10 @@ export function createRecord(input: Partial<LedgerRecord> = {}): LedgerRecord {
     createdAt: input.createdAt || now,
     updatedAt: input.updatedAt || now
   };
+}
+
+function validCriticality(value: unknown): LedgerRecord['criticality'] {
+  return value === 'important' || value === 'routine' ? value : 'critical';
 }
 
 function validCadence(value: unknown): number {

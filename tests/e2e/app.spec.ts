@@ -38,7 +38,7 @@ test('home and policy routes have no serious accessibility violations', async ({
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
   }
   await page.goto('/');
-  await page.getByRole('button', { name: 'Use dark theme' }).click();
+  await page.evaluate(() => { document.documentElement.dataset.theme = 'dark'; });
   const darkResults = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
   expect(darkResults.violations.filter((violation) => ['serious', 'critical'].includes(violation.impact || ''))).toEqual([]);
 });

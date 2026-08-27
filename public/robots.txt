@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://backup-coverage-ledger.sociobot.in/sitemap.xml
