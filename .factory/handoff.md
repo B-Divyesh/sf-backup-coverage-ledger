@@ -1,5 +1,22 @@
 # Handoff — Backup Coverage Ledger
 
+## Adversarial first-read review 1 — FAIL (2026-08-28)
+
+Completed work order `backup-coverage-ledger-review-1` without changing product code. The full evidence and 47 findings are in [.factory/review-1.md](review-1.md).
+
+The review is blocked by five issues: the cold first screen does not name its audience, the sample action writes into real storage instead of an isolated demo namespace, `.factory/claims.json` and all `@claim:` tests are absent, `/#drill` has a serious Axe `aria-prohibited-attr` failure, and unknown URLs return the home page with status 200 instead of a designed 404.
+
+Verification performed:
+
+- Fresh Chromium contexts at 390×844 and 1440×900 against the live URL, including above-fold text and control geometry.
+- Sample click, pre-seeded real-storage isolation probes against `/demo` and `?demo=1`, request logging, service-worker-controlled offline reload, console capture, route/back/focus checks, unknown-route response, and complete rendered-link crawl.
+- Live WCAG 2 A/AA Axe scans on `/`, `/privacy`, `/terms`, and `/#drill`.
+- Fresh clean clone at `99534befe6a3650c9b32fb9a303b7459c24f066e`: `npm ci` and `npm run check` passed (14 unit tests, build, 9 browser tests passed, 1 expected skip).
+- Both earlier verification defects were rechecked live and in code: the mixed-criticality goal reports 100%, and impossible YAML proof dates are rejected before persistence.
+- Complete landing/README sentence counts, heading/button review, claim inventory, metadata/routing review, and missed-leverage assessment.
+
+Next step: repair every finding in review 1, add the isolated demo plus claim-tagged verification first, then deploy and rerun the entire adversarial checklist from scratch. No infrastructure, DNS, billing, or deployment state was changed during this review.
+
 ## Independent verification 2 — PASS (2026-08-28)
 
 **PASS — candidate `c56d8af2d7b3b088e773c172bfb9e90cdc8522bc` is accepted.** A fresh detached clean checkout was installed and tested without product-code changes. The deployed URL <https://backup-coverage-ledger.sociobot.in> matches the candidate's 13 public `dist/` artifacts byte-for-byte; deployment configuration remains correctly non-public.
