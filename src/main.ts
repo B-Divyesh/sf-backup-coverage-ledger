@@ -105,9 +105,13 @@ function summary(): string {
   const statuses = records.map((record) => getStatus(record));
   const current = statuses.filter((status) => status === 'current' || status === 'due').length;
   const attention = records.length - current;
+  const criticalCount = records.filter((record) => record.criticality === 'critical').length;
   const coverage = successCoverage(records);
+  const goal = criticalCount
+    ? `<strong>${coverage}%</strong><small>${coverage >= 90 ? 'Target met · critical assets' : 'Target: 90% of critical assets'}</small>`
+    : '<strong>—</strong><small>No critical assets listed</small>';
   return `<aside class="summary" aria-label="Coverage summary">
-    <div><span>30-day goal</span><strong>${coverage}%</strong><small>${coverage >= 90 ? 'Target met' : 'Target: 90%'}</small></div>
+    <div><span>30-day goal</span>${goal}</div>
     <div><span>Current proof</span><strong>${current}<small> / ${records.length}</small></strong><small>Within each cadence</small></div>
     <div><span>Needs review</span><strong>${attention}</strong><small>Gaps or stale proof</small></div>
   </aside>`;

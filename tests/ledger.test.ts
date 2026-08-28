@@ -35,13 +35,27 @@ describe('coverage status', () => {
 });
 
 describe('30-day pilot measure', () => {
-  it('requires owner, location, and recent proof', () => {
+  it('requires owner, location, and recent proof for critical assets only', () => {
     const records = [
       { ...complete(), lastProofDate: '2026-08-10' },
       { ...complete(), recoveryLocation: '', lastProofDate: '2026-08-10' },
-      { ...complete(), lastProofDate: '2026-06-01' }
+      { ...complete(), lastProofDate: '2026-06-01' },
+      { ...complete(), criticality: 'routine' as const }
     ];
     expect(successCoverage(records, new Date('2026-08-27'))).toBe(33);
     expect(successCoverage([], new Date('2026-08-27'))).toBe(0);
+  });
+
+  it('does not let routine or important assets lower the critical-only target', () => {
+    const records = [
+      { ...complete(), criticality: 'critical' as const, lastProofDate: '2026-08-26' },
+      { ...complete(), criticality: 'routine' as const },
+      { ...complete(), criticality: 'important' as const }
+    ];
+    expect(successCoverage(records, new Date('2026-08-27'))).toBe(100);
+  });
+
+  it('returns zero when no critical assets are listed so the UI can show its explicit empty state', () => {
+    expect(successCoverage([{ ...complete(), criticality: 'routine' }], new Date('2026-08-27'))).toBe(0);
   });
 });

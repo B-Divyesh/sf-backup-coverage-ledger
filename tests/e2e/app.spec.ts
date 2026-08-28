@@ -51,3 +51,41 @@ test('mobile view fits without horizontal page overflow and keyboard focus is vi
   await page.keyboard.press('Tab');
   await expect(page.getByText('Skip to main content')).toBeFocused();
 });
+
+test('calculates the 30-day goal from critical assets only and names the no-critical state', async ({ page }) => {
+  const today = new Date().toISOString().slice(0, 10);
+  const csv = [
+    'asset,owner,criticality,backupTarget,recoveryLocation,retention,extractionMethod,lastProofDate,proofNotes,proofCadenceDays',
+    `Customer database,Platform,critical,Object store,Runbook,30 days,Restore sample,${today},Opened sample,30`,
+    'Old reports,Operations,routine,Archive bucket,Runbook,365 days,Download report,,,30'
+  ].join('\n');
+  await page.goto('/');
+  await page.locator('#import-file').setInputFiles({ name: 'mixed-criticality.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) });
+  const summary = page.getByLabel('Coverage summary');
+  await expect(summary).toContainText('30-day goal');
+  await expect(summary).toContainText('100%');
+  await expect(summary).toContainText('Target met · critical assets');
+
+  const routineOnly = [
+    'asset,owner,criticality,backupTarget,recoveryLocation,retention,extractionMethod,lastProofDate,proofNotes,proofCadenceDays',
+    'Archived reports,Operations,routine,Archive bucket,Runbook,365 days,Download report,,,30'
+  ].join('\n');
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  await page.locator('#import-file').setInputFiles({ name: 'routine-only.csv', mimeType: 'text/csv', buffer: Buffer.from(routineOnly) });
+  await expect(page.getByLabel('Coverage summary')).toContainText('No critical assets listed');
+});
+
+test('rejects invalid portable proof dates before they can enter the ledger', async ({ page }) => {
+  const header = 'asset,owner,criticality,backupTarget,recoveryLocation,retention,extractionMethod,lastProofDate,proofNotes,proofCadenceDays';
+  const row = 'Customer database,Platform,critical,Object store,Runbook,30 days,Restore sample';
+  await page.goto('/');
+  const invalidDates: Array<[string, string]> = [['bad-date.csv', 'not-a-date'], ['impossible-date.csv', '2026-02-30']];
+  for (const [name, date] of invalidDates) {
+    const csv = `${header}\n${row},${date},Opened sample,30`;
+    await page.locator('#import-file').setInputFiles({ name, mimeType: 'text/csv', buffer: Buffer.from(csv) });
+    await expect(page.getByText(/Import failed: Row 2 has an invalid lastProofDate/)).toBeVisible();
+    await expect(page.getByText('Customer database')).toHaveCount(0);
+  }
+  await expect(page.getByText('Infinity days since proof')).toHaveCount(0);
+});

@@ -1,4 +1,4 @@
-import { createRecord } from './ledger';
+import { createRecord, isIsoCalendarDate } from './ledger';
 import type { Criticality, ImportResult, LedgerRecord } from './types';
 
 export const COLUMNS = [
@@ -48,6 +48,7 @@ export function parseCsv(text: string): ImportResult {
     const raw: Record<string, string> = {};
     headers.forEach((header, column) => { raw[header] = values[column]?.trim() || ''; });
     if (!raw.asset) throw new Error(`Row ${index + 2} needs an asset name.`);
+    validateProofDate(raw.lastProofDate, `Row ${index + 2}`);
     const criticality = normalizeCriticality(raw.criticality, index + 2, warnings);
     return createRecord({
       asset: raw.asset, owner: raw.owner, criticality,
@@ -96,6 +97,7 @@ export function parseYaml(text: string): ImportResult {
   const warnings: string[] = [];
   const normalized = records.map((raw, index) => {
     if (!raw.asset) throw new Error(`YAML record ${index + 1} needs an asset name.`);
+    validateProofDate(raw.lastProofDate, `YAML record ${index + 1}`);
     return createRecord({
       asset: raw.asset, owner: raw.owner, criticality: normalizeCriticality(raw.criticality, index + 1, warnings),
       backupTarget: raw.backupTarget, recoveryLocation: raw.recoveryLocation,
@@ -105,6 +107,12 @@ export function parseYaml(text: string): ImportResult {
     });
   });
   return { records: normalized, warnings };
+}
+
+function validateProofDate(value: string | undefined, source: string): void {
+  if (value && !isIsoCalendarDate(value)) {
+    throw new Error(`${source} has an invalid lastProofDate. Use a real YYYY-MM-DD calendar date.`);
+  }
 }
 
 export function parsePortableFile(name: string, text: string): ImportResult {

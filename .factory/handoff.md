@@ -1,21 +1,20 @@
-# Handoff — Backup Coverage Ledger v1
+# Handoff — Backup Coverage Ledger repair 1
 
-## Independent verifier addendum — **FAIL** (2026-08-28)
+## Release-blocker repair (2026-08-28)
 
-Candidate `3b67cd88cac7e262236258c0b654488b85cc0940` was independently verified from a clean install and against <https://backup-coverage-ledger.sociobot.in>. **Do not accept this candidate.** Full evidence is in [.factory/verification.md](verification.md).
+This repair addresses both findings in the independent verification of candidate `3b67cd88cac7e262236258c0b654488b85cc0940`; the original report remains at [.factory/verification.md](verification.md).
 
-Acceptance-blocking defect: the displayed 30-day goal includes all records, while the researched success measure is explicitly for critical assets only. A ledger containing one proven critical asset and one unproven routine asset displays 50% even though the correct critical-only measure is 100%. A second P2 defect allows malformed imported proof dates and displays `Infinity days since proof`.
+- **P1 fixed:** the 30-day goal now calculates its numerator and denominator from `critical` records only. A mixed ledger with one current critical record and one unproven routine record now displays **100%**, as required by the researched success measure. When no critical assets are listed, the summary deliberately displays **“No critical assets listed”** rather than a misleading 0% target result.
+- **P2 fixed:** portable CSV and YAML imports validate each non-empty `lastProofDate` as a real `YYYY-MM-DD` calendar date. Invalid formats and impossible dates (such as `2026-02-30`) reject the import with its row/record and field before anything is saved, so `Infinity days since proof` cannot be rendered from an imported date.
 
-All available repository gates pass (`npm ci`, `npm test`, `npm run build`, `npm run test:e2e`, `npm run check`, and production audit); local/live Axe found no serious/critical issues, offline reload works, and all public deployed product artifacts byte-match the candidate build. These successes do not override the correctness failure.
-
-- Work order: `backup-coverage-ledger-build-1`
-- Completed: 2026-08-27
+- Work order: `backup-coverage-ledger-repair-1`
+- Completed: 2026-08-28
 - Artifact: static Vite + TypeScript app, deployed from `dist/`
 
 ## What shipped
 
 - A local-first asset ledger covering owner, criticality, backup target, recovery location, retention, extraction method, proof date, proof notes, and per-asset proof cadence.
-- Computed states for coverage gap, never proven, proof expired, proof due soon, and proof current. The 30-day pilot measure is shown separately and never inferred from a backup merely existing.
+- Computed states for coverage gap, never proven, proof expired, proof due soon, and proof current. The 30-day pilot measure is shown separately, is calculated from critical assets only, and is never inferred from a backup merely existing.
 - Add/edit flows, explicit restore-proof recording, search and status filters, specific delete confirmation, and an immediate undo path.
 - Portable CSV and flat YAML export/import with quoted-value support, row-level errors, criticality normalization warnings, 2MB input limit, and no network upload.
 - A generated, printable restore-drill checklist derived from current ledger records.
@@ -36,16 +35,19 @@ npm run test:e2e
 
 The exact deployment command is `npm run build`; it produces `dist/index.html` and `dist/staticwebapp.config.json` at the required static root. `npm run check` runs unit tests, the production build, and Playwright Chromium desktop/mobile tests.
 
-Verification completed locally:
+Verification completed locally from a clean `npm ci` install:
 
-- `npm test`: 10/10 unit tests pass (status/expiry/goal rules and CSV/YAML parsing/round trips).
-- Playwright 1.58.2: desktop and mobile end-to-end add → persist → proof → drill workflow passes; 390px overflow and keyboard skip-link checks pass.
+- `npm test`: **14/14** unit tests pass, including critical-only coverage, zero-critical state support, and malformed/impossible proof dates in both CSV and YAML.
+- `npm run build`: TypeScript `--noEmit` and the Vite production build pass; `dist/index.html` is at the required static root.
+- `npm run test:e2e`: Playwright 1.58.2 passes **9 tests** across desktop and iPhone 13 / 390px projects (one intentional desktop-only mobile assertion is skipped). It includes browser regressions for the mixed-criticality 100% goal, the no-critical state, and rejected invalid CSV dates before persistence.
+- `npm run check`: passes the complete unit → production build → desktop/mobile browser gate.
+- Keyboard: the existing add/proof dialog flow, Escape/focus return, and first-tab skip link remain covered; 390px horizontal overflow is ≤1px.
 - Axe via Playwright: no serious or critical WCAG 2 A/AA violations across `/`, `/privacy`, and `/terms`, including the dark treatment.
-- Factory `verify-url.sh`: HTTP 200; title, `lang`, single `h1`, `main`, alt text, and labeled button checks pass; zero page/console errors.
-- `npm audit`: zero known vulnerabilities.
-- Build budget: 32.42KB JavaScript and 20.20KB CSS uncompressed; no downloaded fonts; 9.3KB mobile AVIF hero. All are below the 200KB / 50KB / 120KB / 300KB budgets.
-- Lighthouse 12.8.2 mobile on the local production preview: Performance 99, Accessibility 100, Best Practices 100, SEO 92; FCP 1.0s, LCP 1.4s, total blocking time 140ms, CLS 0. The lab run does not emit INP; total blocking time is below the 200ms interaction proxy budget.
-- Offline smoke test: after service-worker activation, Chromium reloaded the product with the network disabled and rendered the ledger shell with `Local · offline` status.
+- `npm audit --omit=dev --audit-level=high`: zero known production vulnerabilities.
+- Build budget: 33.04KB JavaScript (11.36KB gzip) and 20.22KB CSS (5.28KB gzip), no downloaded fonts, and a 9.3KB mobile AVIF hero—within the 200KB / 50KB / 120KB / 300KB budgets.
+- Production-preview response checks confirm `/`, `/privacy`, and `/sw.js` resolve from `dist/`; the deployed response policy retains its strict CSP, HSTS, `no-referrer`, `nosniff`, and restrictive Permissions-Policy. The application has no remote application calls, analytics, remote fonts, or upload path; records/imports remain in browser storage.
+- A production-preview Chromium smoke test imported the P1 mixed ledger (100% critical-only result), rejected the P2 impossible CSV date before persistence, activated the service worker, then reloaded with the network disabled and rendered `Local · offline` at 390px.
+- Lighthouse 12.8.2 was rerun against the production preview but Chrome’s audit target crashed before a report was written (the independent verifier recorded the same post-audit target-crash behavior). This is an environment limitation; the passing browser/a11y checks and measured asset budgets above remain the release evidence.
 
 ## Known gaps and honest boundaries
 

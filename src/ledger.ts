@@ -48,6 +48,23 @@ export function daysSince(date: string, today = new Date()): number {
   return Math.floor((current.getTime() - parsed.getTime()) / 86_400_000);
 }
 
+/**
+ * Accept only the portable format the ledger exports: a real YYYY-MM-DD
+ * calendar date. `new Date()` alone is deliberately not enough here because
+ * it silently normalizes impossible dates such as 2026-02-30.
+ */
+export function isIsoCalendarDate(value: string): boolean {
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return false;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  return parsed.getUTCFullYear() === year
+    && parsed.getUTCMonth() === month - 1
+    && parsed.getUTCDate() === day;
+}
+
 export function getStatus(record: LedgerRecord, today = new Date()): CoverageStatus {
   if (missingFields(record).length > 0) return 'gap';
   if (!record.lastProofDate) return 'unproven';
@@ -74,9 +91,10 @@ export function proofExpiry(record: LedgerRecord): string {
 }
 
 export function successCoverage(records: LedgerRecord[], today = new Date()): number {
-  if (!records.length) return 0;
-  const covered = records.filter((record) =>
+  const criticalRecords = records.filter((record) => record.criticality === 'critical');
+  if (!criticalRecords.length) return 0;
+  const covered = criticalRecords.filter((record) =>
     Boolean(record.owner && record.recoveryLocation && record.lastProofDate && daysSince(record.lastProofDate, today) <= 30 && daysSince(record.lastProofDate, today) >= 0)
   ).length;
-  return Math.round((covered / records.length) * 100);
+  return Math.round((covered / criticalRecords.length) * 100);
 }
