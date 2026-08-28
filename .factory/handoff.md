@@ -49,6 +49,12 @@ Verification completed locally from a clean `npm ci` install:
 - A production-preview Chromium smoke test imported the P1 mixed ledger (100% critical-only result), rejected the P2 impossible CSV date before persistence, activated the service worker, then reloaded with the network disabled and rendered `Local · offline` at 390px.
 - Lighthouse 12.8.2 was rerun against the production preview but Chrome’s audit target crashed before a report was written (the independent verifier recorded the same post-audit target-crash behavior). This is an environment limitation; the passing browser/a11y checks and measured asset budgets above remain the release evidence.
 
+## Deployment evidence
+
+- Repair commit `8ad6a3d2a342f746edf8663dd86abba440b7e67d` was pushed to `origin/main` and its already-verified `dist/` was deployed to the Azure Static Web App `sf-backup-coverage-ledger` production environment.
+- Live <https://backup-coverage-ledger.sociobot.in> returned HTTP 200 after deployment. SHA-256 matched the deployed `index.html`, `assets/index-DFfLbc4t.js`, `assets/index-CrGsKeVQ.css`, and `sw.js` to the local production build.
+- Live headers preserve HSTS, `Referrer-Policy: no-referrer`, `X-Content-Type-Options: nosniff`, restrictive `Permissions-Policy`, and the self-only CSP. The working tree is clean after deployment; the CLI-generated local credential file was removed.
+
 ## Known gaps and honest boundaries
 
 - The product does not execute, inspect, or cryptographically attest backups. Proof is human-entered evidence after a real extraction.
