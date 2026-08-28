@@ -1,4 +1,16 @@
-# Handoff — Backup Coverage Ledger repair 1
+# Handoff — Backup Coverage Ledger
+
+## Independent verification 2 — PASS (2026-08-28)
+
+**PASS — candidate `c56d8af2d7b3b088e773c172bfb9e90cdc8522bc` is accepted.** A fresh detached clean checkout was installed and tested without product-code changes. The deployed URL <https://backup-coverage-ledger.sociobot.in> matches the candidate's 13 public `dist/` artifacts byte-for-byte; deployment configuration remains correctly non-public.
+
+- `npm ci`, `npm test` (14 tests), `npm run build`, `npm run test:e2e` (10 desktop/mobile tests), and `npm run check` all passed. The build includes the available TypeScript check; no separate lint command exists.
+- Fresh live checks passed: axe found 0 serious/critical (and 0 total) WCAG 2 A/AA violations on `/`, `/privacy`, `/terms`, and the dark treatment; 390px had 0px overflow; keyboard focus used a 3px visible outline; reduced motion removed transforms; no browser page/console errors occurred.
+- Fresh product checks confirmed the repaired critical-only 30-day metric (one current critical plus an unproven routine record displays 100%), rejected an impossible YAML proof date before persistence, and validated local-only storage, offline cached reload, and first-party-only application requests.
+- Live Lighthouse 13.4.1: Performance 100, Accessibility 100, Best Practices 100, SEO 100; FCP/LCP 1.2s/1.2s, TBT 60ms, CLS 0. Built JS/CSS are 33,044/20,224 bytes (11,276/5,311 gzip), with no webfonts and a 9,333-byte 480px AVIF.
+- Live policy is HSTS + no-referrer + nosniff + restrictive Permissions-Policy + self-only CSP. HTML/service-worker revalidate at 30 seconds; hashed assets are immutable for one year.
+
+No defects were found. The only test boundary is that a future service-worker revision is not available on the fixed production URL; its shipped update logic was inspected (`skipWaiting`, `clients.claim`, versioned cache cleanup) and the current worker controlled and served an offline reload. Full evidence is in [.factory/verification-2.md](verification-2.md).
 
 ## Release-blocker repair (2026-08-28)
 
