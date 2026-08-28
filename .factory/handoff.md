@@ -1,5 +1,13 @@
 # Handoff — Backup Coverage Ledger v1
 
+## Independent verifier addendum — **FAIL** (2026-08-28)
+
+Candidate `3b67cd88cac7e262236258c0b654488b85cc0940` was independently verified from a clean install and against <https://backup-coverage-ledger.sociobot.in>. **Do not accept this candidate.** Full evidence is in [.factory/verification.md](verification.md).
+
+Acceptance-blocking defect: the displayed 30-day goal includes all records, while the researched success measure is explicitly for critical assets only. A ledger containing one proven critical asset and one unproven routine asset displays 50% even though the correct critical-only measure is 100%. A second P2 defect allows malformed imported proof dates and displays `Infinity days since proof`.
+
+All available repository gates pass (`npm ci`, `npm test`, `npm run build`, `npm run test:e2e`, `npm run check`, and production audit); local/live Axe found no serious/critical issues, offline reload works, and all public deployed product artifacts byte-match the candidate build. These successes do not override the correctness failure.
+
 - Work order: `backup-coverage-ledger-build-1`
 - Completed: 2026-08-27
 - Artifact: static Vite + TypeScript app, deployed from `dist/`
