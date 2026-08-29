@@ -22,6 +22,17 @@ async function expectNoAccountOrBillingControls(page: Page): Promise<void> {
   expect(controls).not.toMatch(/\b(sign in|log in|create account|subscribe|checkout|payment|billing|upgrade|paywall)\b/i);
 }
 
+async function addSampleAsset(page: Page, asset: string): Promise<void> {
+  await page.getByRole('button', { name: 'Add asset' }).click();
+  await page.getByLabel('Asset or data set *').fill(asset);
+  await page.getByLabel('Accountable owner *').fill('Operations');
+  await page.getByLabel('Backup target *').fill('Encrypted archive');
+  await page.getByLabel('Recovery location *').fill('Operations runbook');
+  await page.getByLabel('Restore steps *').fill('Restore a representative sample in isolation.');
+  await page.getByRole('button', { name: 'Save asset' }).click();
+  await expect(page.getByRole('heading', { name: asset })).toBeVisible();
+}
+
 test('@claim:demo-isolation keeps sample changes away from the real ledger and resets them', async ({ page }) => {
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, value), { key: REAL_KEY, value: JSON.stringify({ version: 1, records: [{ id: 'real-private', asset: 'Real private database', owner: 'Real team', criticality: 'critical', backupTarget: 'Real vault', recoveryLocation: 'Real runbook', retention: '', extractionMethod: 'Real restore', lastProofDate: '', proofNotes: '', proofCadenceDays: 30, createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z' }] }) });
   await openDemo(page);
@@ -166,6 +177,7 @@ test('@claim:free completes every feature class with no account, subscription, o
   const requests: Array<{ url: string; method: string }> = [];
   page.on('request', (request) => requests.push({ url: request.url(), method: request.method() }));
   await openDemo(page);
+  await addSampleAsset(page, 'Free feature sample');
   await page.getByRole('button', { name: 'Record restore proof' }).first().click();
   await page.getByLabel('What was restored and checked? *').fill('Restored and opened a representative sample.');
   await page.getByRole('button', { name: 'Record proof' }).click();
@@ -189,6 +201,7 @@ test('@claim:safety-boundary runs ledger flows without credential controls or ba
   await page.getByRole('button', { name: 'Add asset' }).click();
   await expect(page.locator('input[type="password"], input[name*="credential" i], input[name*="token" i], textarea[name*="credential" i], textarea[name*="token" i]')).toHaveCount(0);
   await page.getByRole('button', { name: 'Cancel' }).first().click();
+  await addSampleAsset(page, 'Safety feature sample');
   const csv = 'asset,owner,criticality,backupTarget,recoveryLocation,retention,extractionMethod,lastProofDate,proofNotes,proofCadenceDays\nSafety sample,Ops,routine,Archive,Runbook,,Open a representative sample,,,30';
   await page.locator('#import-file').setInputFiles({ name: 'safety.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) });
   await page.getByRole('button', { name: 'Merge file' }).click();
