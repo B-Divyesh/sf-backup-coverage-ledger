@@ -1,0 +1,65 @@
+{
+  "checks": [
+    {
+      "route": "/?demo=1",
+      "status": 200,
+      "title": "Demo — Backup Coverage Ledger",
+      "h1": 1,
+      "main": 1,
+      "axe": 0,
+      "errors": [],
+      "allSameOrigin": true
+    },
+    {
+      "route": "/drill?demo=1",
+      "status": 200,
+      "title": "Restore drill — Backup Coverage Ledger",
+      "h1": 1,
+      "main": 1,
+      "axe": 0,
+      "errors": [],
+      "allSameOrigin": true
+    },
+    {
+      "route": "/privacy?demo=1",
+      "status": 200,
+      "title": "Privacy — Backup Coverage Ledger",
+      "h1": 1,
+      "main": 1,
+      "axe": 0,
+      "errors": [],
+      "allSameOrigin": true
+    },
+    {
+      "route": "/terms?demo=1",
+      "status": 200,
+      "title": "Terms — Backup Coverage Ledger",
+      "h1": 1,
+      "main": 1,
+      "axe": 0,
+      "errors": [],
+      "allSameOrigin": true
+    },
+    {
+      "route": "/polish-3-missing",
+      "status": 404,
+      "title": "Page not found — Backup Coverage Ledger",
+      "h1": 1,
+      "main": 1,
+      "axe": 0,
+      "errors": [
+        "Failed to load resource: the server responded with a status of 404 ()"
+      ],
+      "allSameOrigin": true
+    }
+  ],
+  "noDataSetOnEmpty": true,
+  "assetLabel": 1,
+  "dataSetLabel": 0,
+  "demo": {
+    "banner": 1,
+    "records": 5,
+    "reset": 1,
+    "startReal": 1
+  }
+}
