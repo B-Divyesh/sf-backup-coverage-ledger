@@ -8,7 +8,7 @@ Free. No account or paid tier.
 
 ## Who it is for
 
-For small IT, platform, and operations teams that use several backup tools but lack one shared coverage record.
+For small IT, platform, and operations teams that use several backup tools but lack one shared ledger.
 
 ## What it does
 
@@ -83,7 +83,7 @@ The researched scope is in [.factory/brief.json](.factory/brief.json). The visua
 
 ## Deploy
 
-Azure Static Web Apps uses `dist/staticwebapp.config.json`. It provides route fallback, a true 404 response, security headers, and asset caching.
+Deploy the `dist/` directory with Azure Static Web Apps. It includes `staticwebapp.config.json` at the deploy root.
 
 ## License
 

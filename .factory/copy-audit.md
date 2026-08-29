@@ -1,60 +1,58 @@
-# Copy audit — polish round 2
+# Copy audit — polish round 4
 
-Method: whitespace-delimited words containing letters or numbers. Hyphenated terms count as one word. The first screen, landing sections, empty state, and dialog guidance are included.
+Method: whitespace-delimited words containing letters or numbers. Hyphenated terms count as one word. This records every authored sentence visible on the landing route in its empty state, including dialog and import guidance; dynamic asset values are excluded.
 
-| Words | Sentence |
-| ---: | --- |
-| 6 | Track backup coverage and restore tests. |
-| 19 | For small IT teams that need one record of each critical asset, its backup, owner, and latest restore test. |
-| 5 | Opens an isolated example ledger. |
-| 1 | Free. |
-| 6 | Works offline after the first visit. |
-| 4 | Stored in this browser. |
-| 7 | A listed backup is not restore proof. |
-| 9 | Record proof after someone restores and opens representative data. |
-| 14 | The ledger flags missing owners, backup targets, recovery locations, and restore steps. |
-| 11 | It marks proof expired after each asset’s chosen interval. |
-| 3 | Keep secrets out. |
-| 5 | Records stay in this browser. |
-| 6 | Imports and exports run here too. |
-| 9 | Add the critical asset you would miss first. |
-| 10 | You can also import a CSV or flat YAML file. |
-| 8 | Add its owner, backup target, and recovery location. |
-| 7 | Restore representative data in an isolated place. |
-| 8 | Add the date and what your team opened. |
-| 19 | The ledger does not run backups, open backup systems, or store credentials. |
-| 8 | Your team performs and checks every restore test. |
-| 5 | Records use this browser’s storage. |
-| 13 | Export a file when your team needs to share or archive the ledger. |
-| 8 | There is no account, subscription, or paid tier. |
-| 4 | Required fields are marked. |
-| 4 | Describe paths, not credentials. |
-| 7 | Proof expires after this many days. |
-| 9 | Only record this after someone restores and opens representative data. |
-| 7 | A ledger entry alone is not proof. |
-| 11 | Type the asset name to remove it from this browser. |
-| 16 | Merge adds new assets, updates newer assets, and skips unchanged assets. |
-| 8 | Replace ledger removes the current ledger first. |
-| 7 | You can undo either action immediately. |
+| Words | Sentence | Claim or check |
+| ---: | --- | --- |
+| 6 | Track backup coverage and restore tests. | — |
+| 19 | For small IT teams that need one record of each critical asset, its backup, owner, and latest restore test. | — |
+| 5 | Opens an isolated sample ledger. | terminology regression |
+| 1 | Free. | `free` |
+| 6 | Works offline after the first visit. | `offline-reload` |
+| 4 | Stored in this browser. | `local-only` |
+| 7 | A listed backup is not restore proof. | `safety-boundary` |
+| 9 | Record proof after someone restores and opens representative data. | — |
+| 12 | The ledger flags missing owners, backup targets, recovery locations, and restore steps. | `missing-fields` |
+| 9 | It marks proof expired after each asset’s chosen interval. | `proof-statuses` |
+| 3 | Keep secrets out. | — |
+| 5 | Records stay in this browser. | `local-only` |
+| 6 | Imports and exports run here too. | `local-only` |
+| 8 | Add the critical asset you would miss first. | terminology regression |
+| 10 | You can also import a CSV or flat YAML file. | `portable-import` |
+| 8 | Add its owner, backup target, and recovery location. | — |
+| 7 | Restore representative data in an isolated place. | — |
+| 8 | Add the date and what your team opened. | — |
+| 12 | The ledger does not run backups, open backup systems, or store credentials. | `safety-boundary` |
+| 8 | Your team performs and checks every restore test. | — |
+| 5 | Records use this browser’s storage. | `local-only` |
+| 13 | Export a file when your team needs to share or archive the ledger. | `csv-roundtrip`, `yaml-roundtrip`, `merge-import` |
+| 8 | There is no account, subscription, or paid tier. | `free` |
+| 4 | Required fields are marked *. | — |
+| 4 | Describe paths, not credentials. | `safety-boundary` |
+| 6 | Proof expires after this many days. | `portable-schema`, `proof-statuses` |
+| 10 | Only record this after someone restores and opens representative data. | — |
+| 7 | A ledger entry alone is not proof. | `safety-boundary` |
+| 13 | The file contains 0 new, 0 newer, 0 unchanged, and 0 conflicting assets. | `merge-import` |
+| 5 | No conflicts need a choice. | — |
+| 11 | Merge adds new assets, updates newer assets, and skips unchanged assets. | `merge-import` |
+| 7 | Replace ledger removes the current ledger first. | `merge-import` |
+| 6 | You can undo either action immediately. | `merge-import` |
+| 10 | Type the asset name to remove it from this browser. | — |
 
-No sentence exceeds 22 words. No banned marketing word appears in product copy.
+The demo route adds one sentence: `Five sample assets show proof that is current, due soon, never recorded, or expired, plus one coverage gap.` (18 words). Its five named states match `proof-statuses`.
 
-## Round 2 README corrections
-
-| Words | Sentence |
-| ---: | --- |
-| 16 | Backup Coverage Ledger helps small IT teams track each critical asset, its backup, and the latest restore test. |
-| 5 | Try it with sample data. |
+No audited sentence exceeds 22 words. No banned marketing word appears.
 
 ## Terminology
 
 | Concept | One term used |
 | --- | --- |
 | Product data | ledger |
-| Tracked critical data set | asset |
+| Tracked critical item | asset |
 | Backup destination | backup target |
-| Tested evidence | restore proof |
+| Dated restore-test record | restore proof |
 | Review schedule | proof interval |
 | Recovery procedure | restore steps |
+| Try-out data | sample |
 
-The only use of “record” as a noun means one saved asset entry. “Restore test” means the real action; “restore proof” means its dated ledger evidence.
+`record` as a noun means one saved asset entry only. `Restore test` is the real action; `restore proof` is its dated ledger evidence. The visitor-copy regression checks `Record restore proof in three steps`, `Opens an isolated sample ledger.`, and README’s `one shared ledger.` wording.

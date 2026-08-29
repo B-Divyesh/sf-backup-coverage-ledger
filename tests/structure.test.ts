@@ -34,7 +34,7 @@ describe('release structure', () => {
       expect(staticPage).toContain(label);
       expect(application).toContain(label);
     }
-    expect(staticPage).toContain('v1.1.2 · polish-3');
+    expect(staticPage).toContain('v1.1.3 · polish-4');
   });
 
   it('lists every route and supplies complete base metadata', () => {
@@ -48,5 +48,16 @@ describe('release structure', () => {
     const description = readFileSync('.factory/catalog-description.txt', 'utf8').trim();
     expect(description.startsWith('Track ')).toBe(true);
     expect(description.length).toBeLessThanOrEqual(120);
+  });
+
+  it('uses one visitor-facing term for each ledger concept', () => {
+    const application = readFileSync('src/main.ts', 'utf8');
+    const readme = readFileSync('README.md', 'utf8');
+    expect(application).toContain('Record restore proof in three steps');
+    expect(application).toContain('Opens an isolated sample ledger.');
+    expect(application).not.toContain('restore evidence');
+    expect(application).not.toContain('example ledger');
+    expect(readme).toContain('one shared ledger.');
+    expect(readme).not.toContain('coverage record');
   });
 });

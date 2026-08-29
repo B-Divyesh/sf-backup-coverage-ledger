@@ -8,7 +8,7 @@
 
 Demo mode reads and writes only the `demo:` namespace. It never reads or writes the real ledger key.
 
-The sample contains five assets. Together they show current, due-soon, unproven, coverage-gap, and expired restore proof.
+The sample contains five assets. It shows proof that is current, due soon, never recorded, or expired, plus one coverage gap.
 
 **Reset demo** replaces demo edits with the original five records. **Start for real** deletes the demo namespace and opens the real ledger. No sample record is copied.
 

@@ -134,8 +134,17 @@ test('rejects invalid portable proof dates before they can enter the ledger', as
 test('uses asset as the tracked-item term in the empty state and form', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByText('Add the critical asset you would miss first.')).toBeVisible();
+  await expect(page.getByText('Record restore proof in three steps')).toBeVisible();
+  await expect(page.getByText('Opens an isolated sample ledger.')).toBeVisible();
+  await expect(page.locator('main')).not.toContainText(/restore evidence|example ledger/i);
   await expect(page.getByText(/data set/i)).toHaveCount(0);
   await page.getByRole('button', { name: 'Add first asset' }).click();
   await expect(page.getByLabel('Asset *')).toBeVisible();
   await expect(page.getByLabel(/data set/i)).toHaveCount(0);
+});
+
+test('describes the sample states without inventing a second unproven state', async ({ page }) => {
+  await page.goto('/?demo=1');
+  await expect(page.getByText('Five sample assets show proof that is current, due soon, never recorded, or expired, plus one coverage gap.')).toBeVisible();
+  await expect(page.locator('main')).not.toContainText(/missing restore proof/i);
 });

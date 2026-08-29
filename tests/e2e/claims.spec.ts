@@ -5,6 +5,21 @@ test.describe.configure({ mode: 'serial' });
 
 const DEMO_KEY = 'demo:backup-coverage-ledger:v1';
 const REAL_KEY = 'backup-coverage-ledger:v1';
+const PORTABLE_COLUMNS = ['id', 'asset', 'owner', 'criticality', 'backupTarget', 'recoveryLocation', 'retention', 'extractionMethod', 'lastProofDate', 'proofNotes', 'proofCadenceDays', 'createdAt', 'updatedAt'] as const;
+
+type PortableRow = Record<(typeof PORTABLE_COLUMNS)[number], string | number>;
+
+function portableCsv(rows: PortableRow[]): string {
+  const cell = (value: string | number) => `"${String(value).replaceAll('"', '""')}"`;
+  return `${PORTABLE_COLUMNS.join(',')}\n${rows.map((row) => PORTABLE_COLUMNS.map((key) => cell(row[key])).join(',')).join('\n')}\n`;
+}
+
+function portableRow(overrides: Partial<PortableRow>): PortableRow {
+  return {
+    id: 'portable-row', asset: 'Portable asset', owner: 'Operations', criticality: 'critical', backupTarget: 'Encrypted archive', recoveryLocation: 'Operations runbook', retention: '30 daily', extractionMethod: 'Restore a representative sample', lastProofDate: '2026-08-01', proofNotes: 'Sample opened', proofCadenceDays: 30, createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z',
+    ...overrides
+  };
+}
 
 async function openDemo(page: Page): Promise<void> {
   await page.goto('/?demo=1');
@@ -59,16 +74,37 @@ test('@claim:ledger-fields renders and persists every recorded field in demo sto
   await expect(record).toContainText('Operations runbook §4');
   await expect(record).toContainText('Restore the latest snapshot');
   const stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) || '{}'), DEMO_KEY);
-  expect(stored.records[0]).toMatchObject({ id: 'demo-customer-db', retention: '30 daily, 12 monthly', proofCadenceDays: 30 });
+  expect(stored.records[0]).toMatchObject({
+    id: 'demo-customer-db',
+    retention: '30 daily, 12 monthly',
+    proofCadenceDays: 30,
+    lastProofDate: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+    proofNotes: 'Schema loaded and ten recent orders opened.'
+  });
   await page.reload();
   await expect(page.locator('[data-record-id="demo-customer-db"]')).toBeVisible();
+  await page.getByRole('button', { name: 'Edit Customer database' }).click();
+  await expect(page.getByLabel('Last restore proof')).toHaveValue(stored.records[0].lastProofDate);
+  await expect(page.getByLabel('Proof notes')).toHaveValue('Schema loaded and ten recent orders opened.');
+  await page.getByRole('button', { name: 'Cancel' }).first().click();
 });
 
 test('@claim:missing-fields names missing coverage fields', async ({ page }) => {
   await openDemo(page);
-  const gap = page.locator('[data-record-id="demo-dns-zones"]');
-  await expect(gap).toContainText('Coverage gap');
-  await expect(gap).toContainText('Missing owner, recovery location');
+  const csv = portableCsv([
+    portableRow({ id: 'missing-owner', asset: 'Missing owner asset', owner: '' }),
+    portableRow({ id: 'missing-target', asset: 'Missing target asset', backupTarget: '' }),
+    portableRow({ id: 'missing-location', asset: 'Missing location asset', recoveryLocation: '' }),
+    portableRow({ id: 'missing-steps', asset: 'Missing steps asset', extractionMethod: '' })
+  ]);
+  await page.locator('#import-file').setInputFiles({ name: 'missing-fields.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) });
+  await expect(page.getByText(/4 new.*0 newer.*0 unchanged.*0 conflicting/)).toBeVisible();
+  await page.getByRole('button', { name: 'Merge file' }).click();
+  for (const [id, gap] of [['missing-owner', 'Missing owner'], ['missing-target', 'Missing backup target'], ['missing-location', 'Missing recovery location'], ['missing-steps', 'Missing restore steps']] as const) {
+    const record = page.locator(`[data-record-id="${id}"]`);
+    await expect(record).toContainText('Coverage gap');
+    await expect(record).toContainText(gap);
+  }
 });
 
 test('@claim:proof-statuses shows current, due, unproven, expired, and gap states', async ({ page }) => {
@@ -83,8 +119,13 @@ test('@claim:local-only keeps a complete demo flow same-origin and in demo stora
   await page.getByLabel('What was restored and checked? *').fill('Restored and opened ten sample rows.');
   await page.getByRole('button', { name: 'Record proof' }).click();
   const download = page.waitForEvent('download'); await page.getByRole('button', { name: 'Export CSV' }).click(); await download;
+  const imported = portableCsv([portableRow({ id: 'local-import', asset: 'Imported local-only asset' })]);
+  await page.locator('#import-file').setInputFiles({ name: 'local-only.csv', mimeType: 'text/csv', buffer: Buffer.from(imported) });
+  await page.getByRole('button', { name: 'Merge file' }).click();
+  await expect(page.getByRole('heading', { name: 'Imported local-only asset' })).toBeVisible();
   await page.reload();
   expect(await page.evaluate((key) => localStorage.getItem(key), DEMO_KEY)).toContain('Restored and opened ten sample rows');
+  expect(await page.evaluate((key) => localStorage.getItem(key), DEMO_KEY)).toContain('Imported local-only asset');
   expect(await page.evaluate((key) => localStorage.getItem(key), REAL_KEY)).toBeNull();
   expect(requests.every((url) => new URL(url).origin === new URL(page.url()).origin)).toBe(true);
 });
@@ -124,6 +165,16 @@ test('@claim:restore-drill builds an asset-specific printable checklist', async 
   await expect(page).toHaveURL(/\/drill\?demo=1/); await expect(page.getByRole('heading', { name: 'Restore checklist' })).toBeVisible();
   await expect(page.getByRole('article').filter({ hasText: 'Customer database' })).toContainText('Restore the latest snapshot');
   await expect(page.getByRole('article')).toHaveCount(5);
+  await page.evaluate(() => { window.print = () => { document.documentElement.dataset.printInvoked = 'true'; }; });
+  await page.getByRole('button', { name: 'Print checklist' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-print-invoked', 'true');
+  await page.emulateMedia({ media: 'print' });
+  await expect(page.locator('.site-header')).toBeHidden();
+  await expect(page.locator('footer')).toBeHidden();
+  await expect(page.locator('.page-actions')).toBeHidden();
+  await expect(page.locator('.drill-record')).toHaveCount(5);
+  const printOverflow = await page.evaluate(() => Math.max(document.documentElement.scrollWidth - document.documentElement.clientWidth, document.body.scrollWidth - document.body.clientWidth));
+  expect(printOverflow).toBeLessThanOrEqual(1);
 });
 
 test('@claim:offline-reload reloads the populated demo after the first visit', async ({ page, context }) => {
@@ -150,19 +201,35 @@ test('@claim:import-limit accepts 2000000 bytes and rejects 2000001 bytes', asyn
   await expect(page.getByText('Import failed: The file is larger than 2 MB. Split it into smaller ledgers.')).toBeVisible();
 });
 
-test('@claim:portable-schema exports IDs, enum values, ISO dates, and intervals from 1 to 3650 days', async ({ page }) => {
+test('@claim:portable-schema round-trips IDs, criticality values, ISO dates, and both interval boundaries', async ({ page }) => {
   await openDemo(page);
-  await page.getByRole('button', { name: 'Edit Customer database' }).click();
-  await expect(page.getByLabel('Criticality *').locator('option')).toHaveText(['Critical', 'Important', 'Routine']);
-  await expect(page.getByLabel('Proof interval (days) *')).toHaveAttribute('min', '1');
-  await expect(page.getByLabel('Proof interval (days) *')).toHaveAttribute('max', '3650');
-  await page.getByRole('button', { name: 'Cancel' }).first().click();
+  const schemaCsv = portableCsv([
+    portableRow({ id: 'schema-min', asset: 'Minimum interval asset', criticality: 'critical', lastProofDate: '2026-08-01', proofCadenceDays: 1 }),
+    portableRow({ id: 'schema-max', asset: 'Maximum interval asset', criticality: 'important', lastProofDate: '2026-08-02', proofCadenceDays: 3650 }),
+    portableRow({ id: 'schema-routine', asset: 'Routine interval asset', criticality: 'routine', lastProofDate: '2026-08-03', proofCadenceDays: 30 })
+  ]);
+  await page.locator('#import-file').setInputFiles({ name: 'schema.csv', mimeType: 'text/csv', buffer: Buffer.from(schemaCsv) });
+  await page.getByRole('button', { name: 'Merge file' }).click();
   const event = page.waitForEvent('download'); await page.getByRole('button', { name: 'Export CSV' }).click(); const text = await downloadText(await event);
   expect(text.split('\n')[0]).toBe('id,asset,owner,criticality,backupTarget,recoveryLocation,retention,extractionMethod,lastProofDate,proofNotes,proofCadenceDays,createdAt,updatedAt');
-  expect(text).toMatch(/,critical,.*\d{4}-\d{2}-\d{2},/);
-  const invalid = 'asset,owner,backupTarget,recoveryLocation,extractionMethod,proofCadenceDays\nBad,Ops,Vault,Guide,Open,3651';
-  await page.locator('#import-file').setInputFiles({ name: 'bad.csv', mimeType: 'text/csv', buffer: Buffer.from(invalid) });
-  await expect(page.getByText(/invalid proofCadenceDays/)).toBeVisible();
+  for (const expected of ['schema-min,Minimum interval asset,Operations,critical', 'schema-max,Maximum interval asset,Operations,important', 'schema-routine,Routine interval asset,Operations,routine', ',2026-08-01,Sample opened,1,', ',2026-08-02,Sample opened,3650,']) expect(text).toContain(expected);
+  await page.locator('#import-file').setInputFiles({ name: 'schema-roundtrip.csv', mimeType: 'text/csv', buffer: Buffer.from(text) });
+  await expect(page.getByText(/0 new.*0 newer.*8 unchanged.*0 conflicting/)).toBeVisible();
+  await page.getByRole('button', { name: 'Merge file' }).click();
+  const stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) || '{}').records, DEMO_KEY) as Array<PortableRow>;
+  for (const [id, cadence] of [['schema-min', 1], ['schema-max', 3650], ['schema-routine', 30]] as const) {
+    const record = stored.find((item) => item.id === id);
+    expect(record).toMatchObject({ id, proofCadenceDays: cadence });
+  }
+  const invalidFiles: Array<[string, PortableRow, RegExp]> = [
+    ['interval-zero.csv', portableRow({ id: 'invalid-zero', proofCadenceDays: 0 }), /invalid proofCadenceDays/],
+    ['interval-too-large.csv', portableRow({ id: 'invalid-large', proofCadenceDays: 3651 }), /invalid proofCadenceDays/],
+    ['impossible-date.csv', portableRow({ id: 'invalid-date', lastProofDate: '2026-02-30' }), /invalid lastProofDate/]
+  ];
+  for (const [name, row, error] of invalidFiles) {
+    await page.locator('#import-file').setInputFiles({ name, mimeType: 'text/csv', buffer: Buffer.from(portableCsv([row])) });
+    await expect(page.getByText(error)).toBeVisible();
+  }
 });
 
 test('@claim:privacy-runtime loads no analytics, advertising, remote fonts, accounts, or third-party scripts', async ({ page }) => {

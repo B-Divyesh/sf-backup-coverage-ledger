@@ -1,1 +1,1 @@
-Track backup coverage, owners, recovery locations, and restore tests in one browser ledger.
+Track backup coverage and restore proof in one browser ledger.
