@@ -16,6 +16,10 @@ describe('release structure', () => {
   it('ships a real static 404 override without an invalid rewrite/status route', () => {
     const config = JSON.parse(readFileSync('public/staticwebapp.config.json', 'utf8'));
     expect(config.responseOverrides['404']).toEqual({ rewrite: '/404.html' });
+    expect(config.navigationFallback).toBeUndefined();
+    expect(config.routes.filter((route: { rewrite?: string }) => route.rewrite).map((route: { route: string }) => route.route)).toEqual([
+      '/drill', '/privacy', '/terms',
+    ]);
     expect(config.routes.some((route: { rewrite?: string; statusCode?: number }) => route.rewrite && route.statusCode)).toBe(false);
     const page = readFileSync('public/404.html', 'utf8');
     expect(page).toContain('<title>Page not found — Backup Coverage Ledger</title>');

@@ -1,8 +1,4 @@
 {
-  "navigationFallback": {
-    "rewrite": "/index.html",
-    "exclude": ["/assets/*", "/404.html", "/404.css", "/*.{css,js,json,svg,png,jpg,jpeg,webp,avif}"]
-  },
   "responseOverrides": {
     "404": { "rewrite": "/404.html" }
   },
@@ -13,6 +9,18 @@
     "Content-Security-Policy": "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
   },
   "routes": [
+    {
+      "route": "/drill",
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/privacy",
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/terms",
+      "rewrite": "/index.html"
+    },
     {
       "route": "/assets/*",
       "headers": { "cache-control": "public, max-age=31536000, immutable" }
