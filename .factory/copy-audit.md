@@ -39,6 +39,13 @@ Method: whitespace-delimited words containing letters or numbers. Hyphenated ter
 
 No sentence exceeds 22 words. No banned marketing word appears in product copy.
 
+## Round 2 README corrections
+
+| Words | Sentence |
+| ---: | --- |
+| 16 | Backup Coverage Ledger helps small IT teams track each critical asset, its backup, and the latest restore test. |
+| 5 | Try it with sample data. |
+
 ## Terminology
 
 | Concept | One term used |

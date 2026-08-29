@@ -1,41 +1,45 @@
-# Handoff — adversarial first-read review 2
+# Handoff — polish round 2
 
-Work order: `backup-coverage-ledger-review-2`
+Work order: `backup-coverage-ledger-polish-2`  
+Repair commit: `2c3d656b6dc281cb4624ae9e62470865204502e4`  
+Product: <https://backup-coverage-ledger.sociobot.in>
 
-Reviewed commit: `14417f2a179edbd0f1f9ea14f657eec599f3de46`
+## What changed
 
-Live URL: <https://backup-coverage-ledger.sociobot.in>
+- Closed every finding from both adversarial reviews. The complete finding-to-change ledger is in `.factory/polish-2.md`.
+- Made the static true-404 page use the same four primary links and complete footer as application routes, with a parity regression test.
+- Turned the `free` and safety-boundary tests into real browser workflows: they exercise proof, export, import, drill, reset, controls, and outgoing requests instead of checking printed promises.
+- Listed the retained accounts, subscription, and advertising promises in `.factory/claims.json`; their tests now cover them.
+- Renamed the destructive import action to **Replace ledger** and made the README use the established `asset` and **Try it with sample data** terms.
+- Added an accessible asset-specific name to each restore-proof action. This fixes the production verifier’s mobile/content-visibility edge case while making the control clearer to assistive technology.
+- Updated the verb-first catalog description and copy audit. The visual proof-lattice system, local-first static artifact class, and deployment output remain unchanged.
 
-## What was done
+## Verification
 
-- Performed cold 390×844 and 1440×900 first-screen reads.
-- Exercised the one-click demo, five sample states, reset, exit, real/demo storage isolation, and request log.
-- Audited every landing and README sentence with word counts, plus headings, terms, and controls.
-- Ran all 16 `claims.json` commands separately from a clean clone.
-- Rechecked all 47 findings from review 1 and the two earlier verification defects in the live site and source.
-- Checked titles, metadata, h1/main structure, deep links, browser Back/focus, live announcements, true 404, internal/external links, CSP, mobile overflow, and visual identity.
-- Ran live Axe WCAG A/AA checks and `/opt/fleet/lib/verify-url.sh`.
-- Did not modify product code.
+Fresh exact clone: `/tmp/bcl-polish-2-final-clean.aKRZl8` at repair SHA.
 
-## Verdict
+- `npm ci`: passed, 0 vulnerabilities reported.
+- Every one of the 16 commands declared in `.factory/claims.json`: passed separately from that clone.
+- `npm run check`: passed — 21 Vitest unit/structure tests, production `dist/` build, and 32 Playwright desktop/mobile/browser tests.
+- Playwright Axe WCAG 2 A/AA route/dialog/dark-theme matrix: 0 violations (included in `npm run check`).
+- Production build: 42.82 kB JavaScript (13.74 kB gzip) and 24.40 kB CSS (6.07 kB gzip); no downloaded fonts.
+- `/opt/fleet/lib/verify-url.sh http://127.0.0.1:4173/?demo=1`: passed. Evidence: `.factory/evidence/polish-2-local-final/verify.json`; title, language, main landmark, one h1, alt text, console errors, and unlabeled buttons are clean.
+- Current screenshots: `.factory/evidence/polish-2-local-final/screenshot-desktop.png`, `.factory/evidence/polish-2-local-final/screenshot-mobile.png`, and `.factory/evidence/polish-2-local-final/404-mobile.png`.
 
-**FAIL.** Five findings remain in `.factory/review-2.md`:
+## Run locally
 
-- Blocking: F-1-8, inconsistent static 404 chrome (reopened earlier finding).
-- Blocking: F-2-1, two claim tests only assert that claim copy exists.
-- Major: F-2-2, unlisted account/subscription/advertising claims.
-- Minor: F-2-3, ambiguous `Replace all` button.
-- Minor: F-2-4, README terminology/action inconsistency.
+```sh
+npm ci
+npm run check
+npm run dev
+```
 
-## Verification evidence
+Open `/?demo=1` for the isolated five-record sample. The demo uses `demo:backup-coverage-ledger:v1`; **Reset demo** reseeds it and **Start for real** deletes it before opening `backup-coverage-ledger:v1`.
 
-- `npm run check`: passed — 20 unit/structure tests, build, 31 browser tests passed, 1 expected skip.
-- All 16 individual manifest commands: process PASS in clean clone `/tmp/bcl-review2-clean.y7IoCU`.
-- Live route Axe scans: zero WCAG 2 A/AA violations.
-- Live URL verifier: passed with no console errors, one h1/main, complete alt text, and labelled buttons.
-- Live crawl: all rendered links returned 200 except the intentional unknown route, which returned the designed 404.
-- Build: JS 42.76 kB raw / 13.73 kB gzip; CSS 24.40 kB raw / 6.07 kB gzip.
+## Deployment and live recheck
 
-## Next steps
+The repair commit was pushed to `origin/main`. The work-order configuration specifies a static deployment with `npm ci && npm test && npm run build` and `dist/`; it provides no Static Web Apps token, app identity, or repository deployment workflow. At the time of this handoff draft, the live host was still serving the preceding asset `index-DgzB0cg7.js`, rather than this repair’s `index-Bk_EctYg.js`. Do not accept the old live revision as the repair. The required cold live recheck must be run once the factory-managed static deployment promotes the pushed SHA.
 
-Apply the five concrete fixes in `.factory/review-2.md`, then rerun every claim command and the full adversarial checklist. No infrastructure, DNS, billing, or deployment changes were made.
+## Known gaps
+
+No known repository or product gaps remain. Live promotion is factory-managed and is the only outstanding external state at this instant.
