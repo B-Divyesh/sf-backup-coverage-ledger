@@ -1,43 +1,32 @@
-# Handoff — polish round 4
+# Handoff — adversarial review 5
 
-Work order: `backup-coverage-ledger-polish-4`
+Work order: `backup-coverage-ledger-review-5`
 
-Role: repair
+Role: reviewer
 
-Base reviewed commit: `c173e43ea0ea77ea7c5bf50326c0376190337f44`
-
-Repair commits: `1d5d314f93bdcf934a0c1371800b3e6b33ab9bd9`, `fd287422dde2b8836450daf11dee6dbc6f19d579`
+Reviewed commit: `66d05de0450aa4a2152f49633cfe438998147f25`
 Live product: <https://backup-coverage-ledger.sociobot.in>
 
 ## Completed
 
-- Closed every finding from reviews 1–4 and polish rounds 1–3. The full finding-to-evidence ledger is in `.factory/polish-4.md`.
-- Restored one term per concept: **asset**, **ledger**, **sample**, and **restore proof**. The first-screen note now says `Opens an isolated sample ledger.`; the workflow heading is `Record restore proof in three steps`; README now says `one shared ledger`.
-- Corrected the demo explanation to match the actual samples: current, due soon, never recorded, expired, and one coverage gap.
-- Strengthened all five inadequately scoped claim tests. They now cover four missing fields, import privacy, printing and print CSS, complete portable-schema boundaries/round trip, and persisted proof date/notes.
-- Removed the unlisted README deployment guarantee and added a regression test that keeps deployment copy instructional.
-- Updated `.factory/claims.json`, `.factory/copy-audit.md`, `.factory/demo.md`, the verb-first catalog description, build IDs, and static 404 parity.
-- Deployed the built `dist/` directory through `/opt/fleet/lib/deploy-static.sh backup-coverage-ledger dist`. Azure deployment ID: `67b5a29e-0b0c-46fd-9af7-a3d03766af98`.
+- Performed the complete cold-site, copy, demo-sandbox, claims, history, route, privacy, accessibility, crawl, and missed-leverage review without changing product code.
+- Added `.factory/review-5.md`; verdict: **PASS**, with zero findings.
+- Updated this handoff. No product behaviour or source file was changed.
 
 ## Verification
 
-Clean clone: `/tmp/bcl-polish-4-clean.J12UIJ` at `1d5d314`.
+Fresh clone: `/tmp/bcl-review-5.b7boKZ` at the reviewed commit.
 
 ```sh
-npm ci --include=dev
-npm audit --omit=dev
+npm ci
 npm run check
 ```
 
-- `npm audit --omit=dev`: 0 vulnerabilities.
-- `npm run check`: 23 unit/structure tests passed; build produced `dist/`; 36 Playwright desktop/mobile/browser/accessibility tests passed.
-- Every command declared in `.factory/claims.json` ran separately from that clean clone and passed: `demo-isolation`, `ledger-fields`, `missing-fields`, `proof-statuses`, `local-only`, `csv-roundtrip`, `yaml-roundtrip`, `portable-import`, `restore-drill`, `offline-reload`, `import-limit`, `portable-schema`, `privacy-runtime`, `free`, `safety-boundary`, and `merge-import`.
-- Production bundle: JavaScript 42.84 kB raw / 13.74 kB gzip; CSS 24.40 kB raw / 6.07 kB gzip.
-- Live `verify-url.sh`: no console errors, `lang=en`, one title/h1/main, no missing image alt text, and no unnamed buttons. See `.factory/evidence/polish-4-live/verify/verify.json`.
-- Live Axe WCAG 2 A/AA: zero violations on home, demo, drill, privacy, terms, and the real 404. Live route/focus/isolation/print evidence: `.factory/evidence/polish-4-live/live-recheck.json`.
-- Live crawl: intended routes/assets return 200, the deliberate missing route returns 404, and CSP/referrer/nosniff headers are present. See `.factory/evidence/polish-4-live/crawl-headers.json` and `not-found.json`.
-- Live mobile Lighthouse: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 1.053 s, TBT 0 ms, CLS 0. See `.factory/evidence/polish-4-live/lighthouse.json`.
-- Visual evidence: `.factory/evidence/polish-4-live/home-desktop.png`, `demo-mobile.png`, and `not-found-mobile.png`. The cold 390px first screen keeps the action and all three facts above the 844px viewport with zero horizontal overflow.
+- `npm run check` passed: 23 unit/structure tests, production build to `dist/`, and full Playwright suite (`test-results/.last-run.json`: `passed`).
+- Every one of the 16 `.factory/claims.json` commands ran separately and passed.
+- Fresh live browser contexts at 390×844 and 1440×900 verified the cold first screen and the one-click demo.
+- Live Axe WCAG 2 A/AA had zero violations on `/`, `/?demo=1`, `/drill?demo=1`, `/privacy?demo=1`, `/terms?demo=1`, and a true 404.
+- Live route crawl, same-origin request check, headers, metadata, back/focus/announcement, and demo storage isolation all passed.
 
 ## Run and deploy
 
@@ -47,8 +36,8 @@ npm run dev
 npm run check
 ```
 
-Build with `npm run build`; deploy `dist/` as a static Azure Static Web App. The production deployment already serves build `v1.1.3 · polish-4`.
+Build with `npm run build`; deploy `dist/` as the static Azure Static Web App.
 
 ## Known gaps and next steps
 
-None. The product remains local-first: it documents backup coverage and restore proof, but does not run backups, access backup systems, or store credentials.
+None. Maintain the claims-to-test mapping and rerun the review matrix when product behaviour or visitor copy changes.
