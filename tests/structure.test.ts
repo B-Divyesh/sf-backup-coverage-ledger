@@ -27,6 +27,16 @@ describe('release structure', () => {
     expect(page.match(/<h1/g)).toHaveLength(1);
   });
 
+  it('keeps static 404 chrome in parity with application routes', () => {
+    const staticPage = readFileSync('public/404.html', 'utf8');
+    const application = readFileSync('src/main.ts', 'utf8');
+    for (const label of ['Backup Coverage Ledger home', '>Ledger<', '>Demo<', '>Restore drill<', '>Privacy<', '>Terms<', 'Source on GitHub (external)', 'Track backup owners, locations, and restore proof.', 'Built by Param Factory', 'Original generative artwork']) {
+      expect(staticPage).toContain(label);
+      expect(application).toContain(label);
+    }
+    expect(staticPage).toContain('v1.1.1 · polish-2');
+  });
+
   it('lists every route and supplies complete base metadata', () => {
     const sitemap = readFileSync('public/sitemap.xml', 'utf8');
     for (const route of ['/?demo=1', '/drill', '/privacy', '/terms']) expect(sitemap).toContain(route);

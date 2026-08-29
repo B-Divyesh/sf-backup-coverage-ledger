@@ -1,8 +1,8 @@
 # Backup Coverage Ledger
 
-Backup Coverage Ledger helps small IT teams track each critical data set, its backup, and the latest restore test.
+Backup Coverage Ledger helps small IT teams track each critical asset, its backup, and the latest restore test.
 
-[Try the isolated sample ledger](https://backup-coverage-ledger.sociobot.in/?demo=1) or [open the live product](https://backup-coverage-ledger.sociobot.in).
+[Try it with sample data](https://backup-coverage-ledger.sociobot.in/?demo=1) or [open the live product](https://backup-coverage-ledger.sociobot.in).
 
 Free. No account or paid tier.
 

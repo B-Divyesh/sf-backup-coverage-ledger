@@ -1,4 +1,4 @@
-# Copy audit — polish round 1
+# Copy audit — polish round 2
 
 Method: whitespace-delimited words containing letters or numbers. Hyphenated terms count as one word. The first screen, landing sections, empty state, and dialog guidance are included.
 
@@ -34,7 +34,7 @@ Method: whitespace-delimited words containing letters or numbers. Hyphenated ter
 | 7 | A ledger entry alone is not proof. |
 | 11 | Type the asset name to remove it from this browser. |
 | 16 | Merge adds new assets, updates newer assets, and skips unchanged assets. |
-| 12 | Replace all removes the current ledger first. |
+| 8 | Replace ledger removes the current ledger first. |
 | 7 | You can undo either action immediately. |
 
 No sentence exceeds 22 words. No banned marketing word appears in product copy.

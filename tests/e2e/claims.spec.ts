@@ -16,6 +16,12 @@ async function downloadText(download: Download): Promise<string> {
   return readFile(await download.path(), 'utf8');
 }
 
+async function expectNoAccountOrBillingControls(page: Page): Promise<void> {
+  await expect(page.locator('input[type="password"], input[autocomplete*="username" i], input[autocomplete*="cc-" i], input[name*="password" i], input[name*="token" i], input[name*="credential" i], input[name*="card" i], input[name*="payment" i]')).toHaveCount(0);
+  const controls = (await page.locator('a, button, input, select, textarea').allTextContents()).join(' ');
+  expect(controls).not.toMatch(/\b(sign in|log in|create account|subscribe|checkout|payment|billing|upgrade|paywall)\b/i);
+}
+
 test('@claim:demo-isolation keeps sample changes away from the real ledger and resets them', async ({ page }) => {
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, value), { key: REAL_KEY, value: JSON.stringify({ version: 1, records: [{ id: 'real-private', asset: 'Real private database', owner: 'Real team', criticality: 'critical', backupTarget: 'Real vault', recoveryLocation: 'Real runbook', retention: '', extractionMethod: 'Real restore', lastProofDate: '', proofNotes: '', proofCadenceDays: 30, createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z' }] }) });
   await openDemo(page);
@@ -148,20 +154,50 @@ test('@claim:portable-schema exports IDs, enum values, ISO dates, and intervals 
   await expect(page.getByText(/invalid proofCadenceDays/)).toBeVisible();
 });
 
-test('@claim:privacy-runtime loads no analytics, remote fonts, or third-party scripts', async ({ page }) => {
+test('@claim:privacy-runtime loads no analytics, advertising, remote fonts, accounts, or third-party scripts', async ({ page }) => {
   const requests: string[] = []; page.on('request', (request) => requests.push(request.url())); await openDemo(page);
   const remoteElements = await page.locator('script[src^="http"], link[rel="stylesheet"][href^="http"], link[rel="preload"][href^="http"]').evaluateAll((nodes) => nodes.map((node) => node.outerHTML));
   expect(remoteElements).toEqual([]); expect(requests.every((url) => new URL(url).origin === new URL(page.url()).origin)).toBe(true);
-  expect(await page.locator('script[src*="analytics"], script[src*="font"]').count()).toBe(0);
+  expect(await page.locator('script[src*="analytics" i], script[src*="advert" i], script[src*="font" i], iframe, [data-ad], [id*="advert" i], [class*="advert" i]').count()).toBe(0);
+  await expectNoAccountOrBillingControls(page);
 });
 
-test('@claim:free shows that all features have no paid tier', async ({ page }) => {
-  await page.goto('/'); await expect(page.getByRole('heading', { name: 'Use every feature for free' })).toBeVisible(); await expect(page.getByText('There is no account, subscription, or paid tier.')).toBeVisible();
+test('@claim:free completes every feature class with no account, subscription, or paid tier', async ({ page }) => {
+  const requests: Array<{ url: string; method: string }> = [];
+  page.on('request', (request) => requests.push({ url: request.url(), method: request.method() }));
+  await openDemo(page);
+  await page.getByRole('button', { name: 'Record restore proof' }).first().click();
+  await page.getByLabel('What was restored and checked? *').fill('Restored and opened a representative sample.');
+  await page.getByRole('button', { name: 'Record proof' }).click();
+  const exportEvent = page.waitForEvent('download'); await page.getByRole('button', { name: 'Export CSV' }).click();
+  const csv = await downloadText(await exportEvent);
+  await page.locator('#import-file').setInputFiles({ name: 'sample.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) });
+  await page.getByRole('button', { name: 'Merge file' }).click();
+  await page.getByRole('link', { name: 'Restore drill' }).click();
+  await expect(page.getByRole('heading', { name: 'Restore checklist' })).toBeVisible();
+  await page.goBack();
+  await page.getByRole('button', { name: 'Reset demo' }).click();
+  await expect(page.locator('[data-record-id]')).toHaveCount(5);
+  await expectNoAccountOrBillingControls(page);
+  expect(requests.every(({ url, method }) => method === 'GET' && new URL(url).origin === new URL(page.url()).origin && !/billing|checkout|payment|subscription|account/i.test(url))).toBe(true);
 });
 
-test('@claim:safety-boundary states that the ledger neither runs backups nor stores credentials', async ({ page }) => {
-  await page.goto('/'); await expect(page.getByRole('heading', { name: 'A record is not a successful restore' })).toBeVisible();
-  await expect(page.getByText('The ledger does not run backups, open backup systems, or store credentials.')).toBeVisible();
+test('@claim:safety-boundary runs ledger flows without credential controls or backup-system requests', async ({ page }) => {
+  const requests: Array<{ url: string; method: string }> = [];
+  page.on('request', (request) => requests.push({ url: request.url(), method: request.method() }));
+  await openDemo(page);
+  await page.getByRole('button', { name: 'Add asset' }).click();
+  await expect(page.locator('input[type="password"], input[name*="credential" i], input[name*="token" i], textarea[name*="credential" i], textarea[name*="token" i]')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Cancel' }).first().click();
+  const csv = 'asset,owner,criticality,backupTarget,recoveryLocation,retention,extractionMethod,lastProofDate,proofNotes,proofCadenceDays\nSafety sample,Ops,routine,Archive,Runbook,,Open a representative sample,,,30';
+  await page.locator('#import-file').setInputFiles({ name: 'safety.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) });
+  await page.getByRole('button', { name: 'Merge file' }).click();
+  await page.getByRole('button', { name: 'Record restore proof' }).first().click();
+  await page.getByLabel('What was restored and checked? *').fill('Opened a representative sample.');
+  await page.getByRole('button', { name: 'Record proof' }).click();
+  await page.getByRole('link', { name: 'Restore drill' }).click();
+  await expect(page.getByRole('heading', { name: 'Restore checklist' })).toBeVisible();
+  expect(requests.every(({ url, method }) => method === 'GET' && new URL(url).origin === new URL(page.url()).origin && !/api|backup-system|credentials|token/i.test(url))).toBe(true);
 });
 
 test('@claim:merge-import compares additions, updates, unchanged rows, conflicts, replacement, and undo', async ({ page }) => {
@@ -182,6 +218,6 @@ test('@claim:merge-import compares additions, updates, unchanged rows, conflicts
   await page.getByLabel('Support ticket export changed in both ledgers').selectOption('imported'); await page.getByRole('button', { name: 'Merge file' }).click();
   await expect(page.locator('[data-record-id]')).toHaveCount(6); await expect(page.getByText('Owner · Updated platform')).toBeVisible(); await expect(page.getByText('Owner · Imported support')).toBeVisible();
   await page.getByRole('button', { name: 'Undo' }).click(); await expect(page.locator('[data-record-id]')).toHaveCount(5); await expect(page.getByText('Owner · Platform team')).toBeVisible();
-  await page.locator('#import-file').setInputFiles({ name: 'merge.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) }); await page.getByRole('button', { name: 'Replace all' }).click(); await expect(page.locator('[data-record-id]')).toHaveCount(5); await expect(page.getByText('New archive')).toBeVisible();
+  await page.locator('#import-file').setInputFiles({ name: 'merge.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) }); await page.getByRole('button', { name: 'Replace ledger' }).click(); await expect(page.locator('[data-record-id]')).toHaveCount(5); await expect(page.getByText('New archive')).toBeVisible();
   await page.getByRole('button', { name: 'Undo' }).click(); await expect(page.getByText('Payroll archive')).toBeVisible();
 });
