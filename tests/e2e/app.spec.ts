@@ -34,14 +34,19 @@ test('all routes and states have no serious accessibility violations', async ({ 
   for (const route of ['/', '/?demo=1', '/drill?demo=1', '/privacy', '/terms', '/missing-route']) {
     await page.goto(route);
     const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
-    expect(results.violations.filter((violation) => ['serious', 'critical'].includes(violation.impact || ''))).toEqual([]);
+    expect(results.violations).toEqual([]);
     await expect(page.locator('main')).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
   }
+  await page.goto('/?demo=1');
+  await page.getByRole('button', { name: 'Edit Customer database' }).click();
+  const dialogResults = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+  expect(dialogResults.violations).toEqual([]);
+  await page.keyboard.press('Escape');
   await page.goto('/');
   await page.evaluate(() => { document.documentElement.dataset.theme = 'dark'; });
   const darkResults = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
-  expect(darkResults.violations.filter((violation) => ['serious', 'critical'].includes(violation.impact || ''))).toEqual([]);
+  expect(darkResults.violations).toEqual([]);
 });
 
 test('mobile view fits without horizontal page overflow and keyboard focus is visible', async ({ page, isMobile }) => {

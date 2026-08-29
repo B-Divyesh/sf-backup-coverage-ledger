@@ -207,7 +207,7 @@ h3 { font-size: 1.35rem; line-height: 1.2; }
   font-weight: 750;
   line-height: 1.2;
   text-decoration: none;
-  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease;
 }
 .button svg { width: 18px; }
 .button--primary { border-color: var(--signal); color: var(--signal-ink); background: var(--signal); box-shadow: 4px 4px 0 var(--ink); }
