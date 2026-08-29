@@ -1,0 +1,14 @@
+{
+  "url": "https://backup-coverage-ledger.sociobot.in",
+  "loadMs": 941,
+  "errors": [],
+  "a11y": {
+    "title": "Backup Coverage Ledger — track restore tests",
+    "lang": "en",
+    "h1": 1,
+    "main": true,
+    "imgsMissingAlt": 0,
+    "buttonsUnlabeled": 0,
+    "textLength": 1797
+  }
+}

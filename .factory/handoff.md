@@ -5,7 +5,7 @@ Work order: `backup-coverage-ledger-polish-1`
 Artifact: static Vite + TypeScript site (`dist/`)
 
 Review source: `.factory/review-1.md`
-Implementation commit: `7ac7c3c`
+Repair commits: `7ac7c3c`, `1a6d6b4`, and `0aedffd`
 
 ## What changed
 
@@ -35,15 +35,25 @@ The built site is in `dist/`. Preview it with `npm run preview -- --host 127.0.0
 
 - `npm run check`: 20 unit/structure tests passed, TypeScript and Vite build passed, 31 Chromium desktop/mobile browser checks passed, and 1 expected project skip remained.
 - Every one of the 16 commands listed in `.factory/claims.json` passed individually from a detached clean checkout.
-- The browser Axe matrix covered `/`, `/?demo=1`, `/drill?demo=1`, `/privacy`, `/terms`, the unknown route, and an open dialog: zero violations.
+- The browser Axe matrix covered `/`, `/?demo=1`, `/drill?demo=1`, `/privacy`, `/terms`, the unknown route, an open dialog, and dark mode: zero violations.
 - `/opt/fleet/lib/verify-url.sh`: title, `lang`, one `h1`, `main`, alt text, button labels, and console checks passed. Evidence is in `.factory/evidence/verify-local/`.
 - Lighthouse mobile: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 1.4 s, CLS 0, TBT 0. Report: `.factory/evidence/lighthouse-home.json`.
-- Build size: JavaScript 42.76 KB (13.73 KB gzip); CSS 24.42 KB (6.07 KB gzip). There are no webfonts or third-party runtime scripts.
+- Build size: JavaScript 42.76 KB (13.73 KB gzip); CSS 24.40 KB (6.07 KB gzip). There are no webfonts or third-party runtime scripts.
 - `npm audit --audit-level=high`: zero vulnerabilities.
 
 ## Deployment and cold live verification
 
-Pending the production deployment in this work order. This section will be replaced with exact production evidence after the cold live check.
+- Final deployed commit: `0aedffd` at <https://backup-coverage-ledger.sociobot.in>.
+- Known routes `/`, `/?demo=1`, `/drill`, `/privacy`, and `/terms` return HTTP 200. `/definitely-not-a-real-page` returns the designed 404 page with HTTP 404.
+- Route-specific browser titles, canonical URLs, heading focus, live announcements, and back navigation passed in a cold context.
+- At 390×844, the first-screen action ends at 512 px, the first sample record begins at 674 px, and horizontal overflow is 0 px. Live screenshots are in `.factory/evidence/live-home-mobile.png`, `.factory/evidence/live-demo-mobile.png`, and `.factory/evidence/live-404.png`.
+- A live isolation probe pre-seeded the real key, edited and reset the demo, then left demo mode. Real data remained untouched and the demo key was discarded.
+- Live Axe WCAG 2 A/AA checks report zero violations across every route, the open edit dialog, dark mode, and the 404 page.
+- Known live pages produced zero console, page, or failed-request errors. Every observed application request was same-origin.
+- A populated demo reloaded offline under service-worker control.
+- The live URL verifier reports no errors, one `h1`, one `main`, and no missing alt text or button names. Evidence is in `.factory/evidence/verify-live/`.
+- Live Lighthouse: Performance 100, Accessibility 100, Best Practices 100, SEO 100; FCP 0.9 s, LCP 1.2 s, TBT 40 ms, CLS 0. Report: `.factory/evidence/lighthouse-live.json`.
+- SHA-256 matches production for `index.html`, `assets/index-DgzB0cg7.js`, `assets/index-CxiHi_fd.css`, and `sw.js`.
 
 ## Known boundaries
 
