@@ -7,7 +7,7 @@ test('creates a record, records proof, persists it, and builds a drill', async (
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Track backup coverage and restore tests');
   await page.getByRole('button', { name: 'Add first asset' }).first().click();
-  await page.getByLabel('Asset or data set *').fill('Production database');
+  await page.getByLabel('Asset *').fill('Production database');
   await page.getByLabel('Accountable owner *').fill('Platform team');
   await page.getByLabel('Backup target *').fill('Encrypted object store');
   await page.getByLabel('Recovery location *').fill('Runbook section 4');
@@ -86,7 +86,7 @@ test('keyboard dialog flow traps focus, closes with Escape, and restores its tri
   const trigger = page.getByRole('button', { name: 'Edit Customer database' });
   await trigger.focus(); await page.keyboard.press('Enter');
   await expect(page.getByRole('dialog')).toBeVisible();
-  await expect(page.getByLabel('Asset or data set *')).toBeFocused();
+  await expect(page.getByLabel('Asset *')).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(trigger).toBeFocused();
 });
@@ -129,4 +129,13 @@ test('rejects invalid portable proof dates before they can enter the ledger', as
     await expect(page.getByText('Customer database')).toHaveCount(0);
   }
   await expect(page.getByText('Infinity days since proof')).toHaveCount(0);
+});
+
+test('uses asset as the tracked-item term in the empty state and form', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByText('Add the critical asset you would miss first.')).toBeVisible();
+  await expect(page.getByText(/data set/i)).toHaveCount(0);
+  await page.getByRole('button', { name: 'Add first asset' }).click();
+  await expect(page.getByLabel('Asset *')).toBeVisible();
+  await expect(page.getByLabel(/data set/i)).toHaveCount(0);
 });

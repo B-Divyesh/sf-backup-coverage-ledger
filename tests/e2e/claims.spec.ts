@@ -24,7 +24,7 @@ async function expectNoAccountOrBillingControls(page: Page): Promise<void> {
 
 async function addSampleAsset(page: Page, asset: string): Promise<void> {
   await page.getByRole('button', { name: 'Add asset' }).click();
-  await page.getByLabel('Asset or data set *').fill(asset);
+  await page.getByLabel('Asset *').fill(asset);
   await page.getByLabel('Accountable owner *').fill('Operations');
   await page.getByLabel('Backup target *').fill('Encrypted archive');
   await page.getByLabel('Recovery location *').fill('Operations runbook');
@@ -37,7 +37,7 @@ test('@claim:demo-isolation keeps sample changes away from the real ledger and r
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, value), { key: REAL_KEY, value: JSON.stringify({ version: 1, records: [{ id: 'real-private', asset: 'Real private database', owner: 'Real team', criticality: 'critical', backupTarget: 'Real vault', recoveryLocation: 'Real runbook', retention: '', extractionMethod: 'Real restore', lastProofDate: '', proofNotes: '', proofCadenceDays: 30, createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z' }] }) });
   await openDemo(page);
   await page.getByRole('button', { name: 'Edit Customer database' }).click();
-  await page.getByLabel('Asset or data set *').fill('Changed demo database');
+  await page.getByLabel('Asset *').fill('Changed demo database');
   await page.getByRole('button', { name: 'Save asset' }).click();
   await expect(page.getByRole('heading', { name: 'Changed demo database' })).toBeVisible();
   await page.getByRole('button', { name: 'Reset demo' }).click();

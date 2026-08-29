@@ -17,7 +17,7 @@ Method: whitespace-delimited words containing letters or numbers. Hyphenated ter
 | 3 | Keep secrets out. |
 | 5 | Records stay in this browser. |
 | 6 | Imports and exports run here too. |
-| 10 | Add the critical data set you would miss first. |
+| 9 | Add the critical asset you would miss first. |
 | 10 | You can also import a CSV or flat YAML file. |
 | 8 | Add its owner, backup target, and recovery location. |
 | 7 | Restore representative data in an isolated place. |
