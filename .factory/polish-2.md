@@ -1,9 +1,9 @@
 # Polish round 2 finding ledger
 
 Reviewed candidate: `14417f2a179edbd0f1f9ea14f657eec599f3de46`  
-Repair commit: `2c3d656b6dc281cb4624ae9e62470865204502e4`
+Repair commits: `2c3d656b6dc281cb4624ae9e62470865204502e4`, `c4d30c83c1d54535760e026bcc74def5c6a016bb`
 
-Local evidence for this repair is a fresh clone at `/tmp/bcl-polish-2-final-clean.aKRZl8`: all 16 manifest commands passed separately, followed by `npm run check` (21 unit/structure tests, production build, 32 Playwright checks). The production-style browser verifier passed at `.factory/evidence/polish-2-local-final/verify.json`; its current desktop and 390px captures are `screenshot-desktop.png` and `screenshot-mobile.png` in that directory.
+Local evidence for this repair is a fresh clone at `/tmp/bcl-polish-2-final2-clean.*`: all 16 manifest commands passed separately, followed by `npm run check` (21 unit/structure tests, production build, 32 Playwright checks). The production-style browser verifier passed at `.factory/evidence/polish-2-local-final/verify.json`; its current desktop and 390px captures are `screenshot-desktop.png` and `screenshot-mobile.png` in that directory.
 
 | Finding | Change made | Evidence | Live URL check |
 |---|---|---|---|

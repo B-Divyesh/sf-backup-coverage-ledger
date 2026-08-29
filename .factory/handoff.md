@@ -1,7 +1,7 @@
 # Handoff — polish round 2
 
 Work order: `backup-coverage-ledger-polish-2`  
-Repair commit: `2c3d656b6dc281cb4624ae9e62470865204502e4`  
+Repair commits: `2c3d656b6dc281cb4624ae9e62470865204502e4`, `c4d30c83c1d54535760e026bcc74def5c6a016bb`  
 Product: <https://backup-coverage-ledger.sociobot.in>
 
 ## What changed
@@ -16,7 +16,7 @@ Product: <https://backup-coverage-ledger.sociobot.in>
 
 ## Verification
 
-Fresh exact clone: `/tmp/bcl-polish-2-final-clean.aKRZl8` at repair SHA.
+Fresh exact clone: `/tmp/bcl-polish-2-final2-clean.*` at `c4d30c83c1d54535760e026bcc74def5c6a016bb`.
 
 - `npm ci`: passed, 0 vulnerabilities reported.
 - Every one of the 16 commands declared in `.factory/claims.json`: passed separately from that clone.
