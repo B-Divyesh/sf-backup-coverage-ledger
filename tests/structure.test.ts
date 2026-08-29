@@ -60,4 +60,10 @@ describe('release structure', () => {
     expect(readme).toContain('one shared ledger.');
     expect(readme).not.toContain('coverage record');
   });
+
+  it('keeps deployment instructions free of unlisted product guarantees', () => {
+    const readme = readFileSync('README.md', 'utf8');
+    expect(readme).toContain('Deploy the `dist/` directory with Azure Static Web Apps.');
+    expect(readme).not.toMatch(/route fallback|true 404|security headers|asset caching/i);
+  });
 });
