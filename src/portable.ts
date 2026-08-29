@@ -2,8 +2,8 @@ import { createRecord, isIsoCalendarDate } from './ledger';
 import type { Criticality, ImportResult, LedgerRecord } from './types';
 
 export const COLUMNS = [
-  'asset', 'owner', 'criticality', 'backupTarget', 'recoveryLocation', 'retention',
-  'extractionMethod', 'lastProofDate', 'proofNotes', 'proofCadenceDays'
+  'id', 'asset', 'owner', 'criticality', 'backupTarget', 'recoveryLocation', 'retention',
+  'extractionMethod', 'lastProofDate', 'proofNotes', 'proofCadenceDays', 'createdAt', 'updatedAt'
 ] as const;
 
 function csvCell(value: unknown): string {
@@ -49,13 +49,16 @@ export function parseCsv(text: string): ImportResult {
     headers.forEach((header, column) => { raw[header] = values[column]?.trim() || ''; });
     if (!raw.asset) throw new Error(`Row ${index + 2} needs an asset name.`);
     validateProofDate(raw.lastProofDate, `Row ${index + 2}`);
+    validateCadence(raw.proofCadenceDays, `Row ${index + 2}`);
     const criticality = normalizeCriticality(raw.criticality, index + 2, warnings);
     return createRecord({
+      id: raw.id || undefined,
       asset: raw.asset, owner: raw.owner, criticality,
       backupTarget: raw.backupTarget, recoveryLocation: raw.recoveryLocation,
       retention: raw.retention, extractionMethod: raw.extractionMethod,
       lastProofDate: raw.lastProofDate, proofNotes: raw.proofNotes,
-      proofCadenceDays: Number(raw.proofCadenceDays || 30)
+      proofCadenceDays: Number(raw.proofCadenceDays || 30),
+      createdAt: raw.createdAt || undefined, updatedAt: raw.updatedAt || undefined
     });
   });
   return { records, warnings };
@@ -81,8 +84,10 @@ export function parseYaml(text: string): ImportResult {
   const records: Record<string, string>[] = [];
   let current: Record<string, string> | null = null;
   for (const sourceLine of text.split(/\r?\n/)) {
+    const indentation = sourceLine.match(/^\s*/)?.[0].length || 0;
     const line = sourceLine.trim();
     if (!line || line.startsWith('#') || line === 'records:' || line === '[]') continue;
+    if (indentation > 4) throw new Error(`Unsupported YAML line: “${line.slice(0, 60)}”. Nested YAML is not supported.`);
     const match = line.match(/^(-\s*)?([A-Za-z][A-Za-z0-9]*):\s*(.*)$/);
     if (!match) throw new Error(`Unsupported YAML line: “${line.slice(0, 60)}”. Export this ledger’s YAML format or use CSV.`);
     if (match[1]) { current = {}; records.push(current); }
@@ -98,12 +103,15 @@ export function parseYaml(text: string): ImportResult {
   const normalized = records.map((raw, index) => {
     if (!raw.asset) throw new Error(`YAML record ${index + 1} needs an asset name.`);
     validateProofDate(raw.lastProofDate, `YAML record ${index + 1}`);
+    validateCadence(raw.proofCadenceDays, `YAML record ${index + 1}`);
     return createRecord({
+      id: raw.id || undefined,
       asset: raw.asset, owner: raw.owner, criticality: normalizeCriticality(raw.criticality, index + 1, warnings),
       backupTarget: raw.backupTarget, recoveryLocation: raw.recoveryLocation,
       retention: raw.retention, extractionMethod: raw.extractionMethod,
       lastProofDate: raw.lastProofDate, proofNotes: raw.proofNotes,
-      proofCadenceDays: Number(raw.proofCadenceDays || 30)
+      proofCadenceDays: Number(raw.proofCadenceDays || 30),
+      createdAt: raw.createdAt || undefined, updatedAt: raw.updatedAt || undefined
     });
   });
   return { records: normalized, warnings };
@@ -112,6 +120,14 @@ export function parseYaml(text: string): ImportResult {
 function validateProofDate(value: string | undefined, source: string): void {
   if (value && !isIsoCalendarDate(value)) {
     throw new Error(`${source} has an invalid lastProofDate. Use a real YYYY-MM-DD calendar date.`);
+  }
+}
+
+function validateCadence(value: string | undefined, source: string): void {
+  if (!value) return;
+  const cadence = Number(value);
+  if (!Number.isInteger(cadence) || cadence < 1 || cadence > 3650) {
+    throw new Error(`${source} has an invalid proofCadenceDays. Use a whole number from 1 to 3650.`);
   }
 }
 

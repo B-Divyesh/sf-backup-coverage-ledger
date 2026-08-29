@@ -1,0 +1,1 @@
+Track each critical asset, its backup owner, recovery location, and latest restore test.

@@ -66,3 +66,5 @@ Hand-authored icons are limited to simple inline SVG geometry (plus, download, u
 ## Provenance
 
 The illustration is generated specifically for this product with the factory Azure image deployment and reviewed for stray text, marks, seams, brands, and palette consistency. It is original project material. Prompt sidecar: `assets/src/proof-lattice.json`. The footer discloses “Original generative artwork.”
+
+The 1200×630 social preview is a centered crop of that original illustration. The Apple touch icon is a raster export of the hand-authored proof-ring favicon. No third-party artwork was added during polish round 1.

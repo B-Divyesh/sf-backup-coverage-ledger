@@ -1,63 +1,89 @@
 # Backup Coverage Ledger
 
-Backup Coverage Ledger is a free, vendor-neutral inventory for small teams that need to know which critical data sets are covered and whether anyone has actually extracted them. It links each asset to an owner, backup target, recovery location, extraction method, retention policy, and dated restore proof.
+Backup Coverage Ledger helps small IT teams track each critical data set, its backup, and the latest restore test.
 
-Live product: [backup-coverage-ledger.sociobot.in](https://backup-coverage-ledger.sociobot.in)
+[Try the isolated sample ledger](https://backup-coverage-ledger.sociobot.in/?demo=1) or [open the live product](https://backup-coverage-ledger.sociobot.in).
 
-It does not perform backups, handle credentials, or treat documentation as proof of a successful restore.
+Free. No account or paid tier.
 
 ## Who it is for
 
-Small operations, platform, IT, and engineering teams that use several backup tools but lack one human-readable view of ownership, coverage, and restore evidence.
+For small IT, platform, and operations teams that use several backup tools but lack one shared coverage record.
 
 ## What it does
 
-- Calculates coverage gaps, never-proven assets, due-soon proofs, and expired proofs.
-- Stores the ledger locally in the browser—no account or application database.
-- Imports and exports portable CSV and a deliberately simple YAML subset.
-- Generates a printable, asset-specific restore drill checklist.
-- Works after the app shell has been cached for offline use.
-- Supports keyboard use, 390px screens, light/dark themes, and reduced motion.
+- Records each asset, owner, backup target, recovery location, restore steps, retention, proof interval, and dated restore proof.
+- Shows gaps, unproven assets, due-soon proof, expired proof, and current proof.
+- Stores real and demo ledgers under separate browser keys.
+- Imports and exports CSV and flat YAML records with stable IDs.
+- Compares shared files before adding, updating, skipping, replacing, or resolving conflicts.
+- Builds a printable, asset-specific restore drill checklist.
+- Works offline after the first visit.
 
-Keep passwords, access keys, tokens, recovery codes, and other secret material out of the ledger and exported files.
+It does not perform backups, access backup systems, handle credentials, or treat documentation as a successful restore.
+
+Every statement above maps to an observable browser test in [.factory/claims.json](.factory/claims.json).
+
+## Try the demo
+
+Open `/?demo=1` or select **Try it with sample data** on the first screen.
+
+The demo contains five realistic assets and never reads or writes the real ledger key. **Reset demo** restores the sample. **Start for real** discards it.
+
+See [.factory/demo.md](.factory/demo.md) for the storage and reset contract.
 
 ## Run locally
 
-Requires Node.js 20 or newer.
+Use Node.js 20 or newer.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Vite prints the local URL. Data is stored in that origin’s `localStorage`.
+Vite prints the local URL. Data uses that origin’s `localStorage`.
 
 ## Test and build
 
 ```sh
 npm test          # unit tests
 npm run build     # production build -> dist/
-npm run test:e2e  # Chromium desktop/mobile flows and axe checks
-npm run check     # all of the above
+npm run test:e2e  # browser, mobile, routing, offline, and accessibility tests
+npm run test:claims
+npm run check     # all unit, build, and browser tests
 ```
 
-Playwright is pinned to 1.58.2. If its Chromium binary is not already available, run `npx playwright install chromium` once.
+Playwright is pinned to 1.58.2. Run `npx playwright install chromium` if Chromium is missing.
 
-The exact deployment build command is `npm run build`. The static deploy root is `dist/`, with `dist/index.html` at its root. `public/staticwebapp.config.json` supplies Azure Static Web Apps navigation fallback and security headers.
+The deploy command is `npm run build`. The static deploy root is `dist/`.
 
 ## Portable file format
 
-Use the app’s export actions to produce a canonical template. CSV headers are:
+Export CSV or YAML to get a file you can edit and import again.
+
+CSV headers are:
 
 ```text
-asset,owner,criticality,backupTarget,recoveryLocation,retention,extractionMethod,lastProofDate,proofNotes,proofCadenceDays
+id,asset,owner,criticality,backupTarget,recoveryLocation,retention,extractionMethod,lastProofDate,proofNotes,proofCadenceDays,createdAt,updatedAt
 ```
 
-Criticality is `critical`, `important`, or `routine`; dates use `YYYY-MM-DD`; proof cadence is 1–3650 days. Imports are limited to 2MB and parsed entirely in the browser.
+Criticality accepts `critical`, `important`, or `routine`. Dates use `YYYY-MM-DD`. The proof interval accepts 1–3650 days.
+
+Imports accept files up to 2,000,000 bytes. They are parsed in the browser.
+
+YAML supports flat records from this app. Nested YAML, aliases, and block scalars are not supported.
+
+Keep passwords, keys, tokens, recovery codes, and other secrets out of ledger files.
 
 ## Privacy and design
 
-The app has no analytics, third-party scripts, remote fonts, accounts, or server-side ledger storage. See the in-product `/privacy` and `/terms` routes. The researched scope is in [.factory/brief.json](.factory/brief.json), the product-specific visual system and original artwork provenance are in [.factory/design.md](.factory/design.md), and release verification is in [.factory/handoff.md](.factory/handoff.md).
+The app has no analytics, remote fonts, accounts, or third-party scripts. Read the in-product [privacy](https://backup-coverage-ledger.sociobot.in/privacy) and [terms](https://backup-coverage-ledger.sociobot.in/terms) pages.
+
+The researched scope is in [.factory/brief.json](.factory/brief.json). The visual system and artwork provenance are in [.factory/design.md](.factory/design.md). Release evidence is in [.factory/handoff.md](.factory/handoff.md).
+
+## Deploy
+
+Azure Static Web Apps uses `dist/staticwebapp.config.json`. It provides route fallback, a true 404 response, security headers, and asset caching.
 
 ## License
 
