@@ -1,0 +1,67 @@
+{
+  "checks": [
+    {
+      "path": "/",
+      "status": 200,
+      "contentType": "text/html"
+    },
+    {
+      "path": "/?demo=1",
+      "status": 200,
+      "contentType": "text/html"
+    },
+    {
+      "path": "/drill",
+      "status": 200,
+      "contentType": "text/html"
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "contentType": "text/html"
+    },
+    {
+      "path": "/terms",
+      "status": 200,
+      "contentType": "text/html"
+    },
+    {
+      "path": "/404.html",
+      "status": 200,
+      "contentType": "text/html"
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "contentType": "text/plain"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "contentType": "text/xml"
+    },
+    {
+      "path": "/favicon.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "path": "/apple-touch-icon.png",
+      "status": 200,
+      "contentType": "image/png"
+    },
+    {
+      "path": "/assets/social-preview.jpg",
+      "status": 200,
+      "contentType": "image/jpeg"
+    }
+  ],
+  "missing": {
+    "status": 404
+  },
+  "headers": {
+    "csp": "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'",
+    "referrerPolicy": "no-referrer",
+    "nosniff": "nosniff"
+  }
+}
