@@ -1,64 +1,41 @@
-# Handoff — Backup Coverage Ledger polish round 1
+# Handoff — adversarial first-read review 2
 
-Work order: `backup-coverage-ledger-polish-1`
+Work order: `backup-coverage-ledger-review-2`
 
-Artifact: static Vite + TypeScript site (`dist/`)
+Reviewed commit: `14417f2a179edbd0f1f9ea14f657eec599f3de46`
 
-Review source: `.factory/review-1.md`
-Repair commits: `7ac7c3c`, `1a6d6b4`, and `0aedffd`
+Live URL: <https://backup-coverage-ledger.sociobot.in>
 
-## What changed
+## What was done
 
-- Rewrote the first screen around the job and audience, with a phone-visible “Try it with sample data” action and three tested facts.
-- Added an isolated `?demo=1` ledger with five realistic proof states, a persistent banner, reset, and discard-to-real behavior. Demo records use only `demo:backup-coverage-ledger:v1`; real records use `backup-coverage-ledger:v1`.
-- Added `.factory/claims.json` with 16 observable claims and exactly one `@claim:<id>` Playwright test for each claim.
-- Added stable-ID import comparison for additions, updates, unchanged records, and conflicts. Users choose conflict outcomes, can replace the ledger, and can undo imports.
-- Added real history routes, route-specific title/metadata/canonical values, heading focus and live announcement, consistent chrome, `/drill`, `/privacy`, `/terms`, and a designed true 404 response.
-- Rewrote landing, interface, legal, metadata, and README copy in plain words. `.factory/copy-audit.md` records sentence counts and terminology.
-- Preserved the proof-lattice visual identity while improving the 390 px composition, touch targets, dialog semantics, and mobile record visibility.
-- Added a resilient versioned offline shell and original 1200×630 social image plus touch icon.
+- Performed cold 390×844 and 1440×900 first-screen reads.
+- Exercised the one-click demo, five sample states, reset, exit, real/demo storage isolation, and request log.
+- Audited every landing and README sentence with word counts, plus headings, terms, and controls.
+- Ran all 16 `claims.json` commands separately from a clean clone.
+- Rechecked all 47 findings from review 1 and the two earlier verification defects in the live site and source.
+- Checked titles, metadata, h1/main structure, deep links, browser Back/focus, live announcements, true 404, internal/external links, CSP, mobile overflow, and visual identity.
+- Ran live Axe WCAG A/AA checks and `/opt/fleet/lib/verify-url.sh`.
+- Did not modify product code.
 
-Every review ID is mapped to its change and evidence in `.factory/polish-1.md`.
+## Verdict
 
-## Run and verify
+**FAIL.** Five findings remain in `.factory/review-2.md`:
 
-```sh
-npm ci
-npm run check
-npm run test:claims
-npm run build
-```
+- Blocking: F-1-8, inconsistent static 404 chrome (reopened earlier finding).
+- Blocking: F-2-1, two claim tests only assert that claim copy exists.
+- Major: F-2-2, unlisted account/subscription/advertising claims.
+- Minor: F-2-3, ambiguous `Replace all` button.
+- Minor: F-2-4, README terminology/action inconsistency.
 
-The built site is in `dist/`. Preview it with `npm run preview -- --host 127.0.0.1`.
+## Verification evidence
 
-## Local evidence
+- `npm run check`: passed — 20 unit/structure tests, build, 31 browser tests passed, 1 expected skip.
+- All 16 individual manifest commands: process PASS in clean clone `/tmp/bcl-review2-clean.y7IoCU`.
+- Live route Axe scans: zero WCAG 2 A/AA violations.
+- Live URL verifier: passed with no console errors, one h1/main, complete alt text, and labelled buttons.
+- Live crawl: all rendered links returned 200 except the intentional unknown route, which returned the designed 404.
+- Build: JS 42.76 kB raw / 13.73 kB gzip; CSS 24.40 kB raw / 6.07 kB gzip.
 
-- `npm run check`: 20 unit/structure tests passed, TypeScript and Vite build passed, 31 Chromium desktop/mobile browser checks passed, and 1 expected project skip remained.
-- Every one of the 16 commands listed in `.factory/claims.json` passed individually from a detached clean checkout.
-- The browser Axe matrix covered `/`, `/?demo=1`, `/drill?demo=1`, `/privacy`, `/terms`, the unknown route, an open dialog, and dark mode: zero violations.
-- `/opt/fleet/lib/verify-url.sh`: title, `lang`, one `h1`, `main`, alt text, button labels, and console checks passed. Evidence is in `.factory/evidence/verify-local/`.
-- Lighthouse mobile: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 1.4 s, CLS 0, TBT 0. Report: `.factory/evidence/lighthouse-home.json`.
-- Build size: JavaScript 42.76 KB (13.73 KB gzip); CSS 24.40 KB (6.07 KB gzip). There are no webfonts or third-party runtime scripts.
-- `npm audit --audit-level=high`: zero vulnerabilities.
+## Next steps
 
-## Deployment and cold live verification
-
-- Final deployed commit: `0aedffd` at <https://backup-coverage-ledger.sociobot.in>.
-- Known routes `/`, `/?demo=1`, `/drill`, `/privacy`, and `/terms` return HTTP 200. `/definitely-not-a-real-page` returns the designed 404 page with HTTP 404.
-- Route-specific browser titles, canonical URLs, heading focus, live announcements, and back navigation passed in a cold context.
-- At 390×844, the first-screen action ends at 512 px, the first sample record begins at 674 px, and horizontal overflow is 0 px. Live screenshots are in `.factory/evidence/live-home-mobile.png`, `.factory/evidence/live-demo-mobile.png`, and `.factory/evidence/live-404.png`.
-- A live isolation probe pre-seeded the real key, edited and reset the demo, then left demo mode. Real data remained untouched and the demo key was discarded.
-- Live Axe WCAG 2 A/AA checks report zero violations across every route, the open edit dialog, dark mode, and the 404 page.
-- Known live pages produced zero console, page, or failed-request errors. Every observed application request was same-origin.
-- A populated demo reloaded offline under service-worker control.
-- The live URL verifier reports no errors, one `h1`, one `main`, and no missing alt text or button names. Evidence is in `.factory/evidence/verify-live/`.
-- Live Lighthouse: Performance 100, Accessibility 100, Best Practices 100, SEO 100; FCP 0.9 s, LCP 1.2 s, TBT 40 ms, CLS 0. Report: `.factory/evidence/lighthouse-live.json`.
-- SHA-256 matches production for `index.html`, `assets/index-DgzB0cg7.js`, `assets/index-CxiHi_fd.css`, and `sw.js`.
-
-## Known boundaries
-
-- The ledger records human-entered restore evidence. It does not execute backups, access backup systems, store credentials, or cryptographically attest a restore.
-- Data belongs to one browser origin. Teams exchange files rather than synchronize through a server.
-- YAML import accepts the app’s flat exported format, not nested YAML, aliases, or block scalars.
-
-No review finding is deferred. No AI feature was added because the record, compare, and restore-drill jobs are deterministic and work fully offline without one.
+Apply the five concrete fixes in `.factory/review-2.md`, then rerun every claim command and the full adversarial checklist. No infrastructure, DNS, billing, or deployment changes were made.
