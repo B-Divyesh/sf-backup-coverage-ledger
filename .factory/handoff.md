@@ -1,27 +1,28 @@
-# Handoff — repair 2
+# Handoff — verification 3
 
-Work order: `backup-coverage-ledger-repair-2`
+Work order: `backup-coverage-ledger-verify-3`
 
 Live product: <https://backup-coverage-ledger.sociobot.in>
 
 Implementation SHA: `38dfb4c1b9a5abc47b8f066322e04a089a087941`
 
-Documentation SHA: the final report commit containing this handoff; the exact pushed SHA is also written to `/work/.evidence/repair-2/shas.json`.
+Documentation reviewed: `80a42000f1c2bcb7c6644f0997900605ceb2ac1e`
 
 Implementation release: `v1.1.4 · repair-2`
 
 ## Result
 
-**PASS — both review-6 findings are fixed, and no known finding remains.**
+**PASS — independent QA found 0 findings and 0 untested claims.**
 
-- Delete confirmation now clears its custom validation error when the operator edits the value and whenever the dialog opens. Wrong name → correct name → delete → Undo works without a reload. Closing after an error and reopening also starts with a valid empty field.
-- The wordmark, informational link, legal/footer links, and static-404 navigation now provide hit areas of at least 44×44 CSS pixels with at least 8px between adjacent navigation targets. A browser regression measures rendered geometry at 390px across normal, demo, legal, and 404 pages.
+- The deployed product was independently compared with implementation `38dfb4c`: all 17 public artifacts match byte-for-byte. `80a4200` is documentation-only.
+- Fresh phone and desktop loads name the job, small-IT audience, and **Try it with sample data** action before scrolling. The one-click demo is isolated, resets, and discards without changing a pre-seeded real record.
+- Live delete typo correction/close-reopen recovery, Undo, offline reload, keyboard/focus behavior, reduced motion, legal routes, links, designed 404, and mobile target geometry passed.
 
 The repair keeps all existing ledger, demo, file, print, offline, privacy, and route behavior. It adds no account, backend, analytics, payment, or external model dependency.
 
 ## Verification
 
-The documented clean setup ran from a detached checkout of the implementation SHA:
+The documented clean setup ran after `npm ci --include=dev` from a clean checkout:
 
 ```sh
 npm ci --include=dev
@@ -33,19 +34,18 @@ Results:
 
 - 23 unit and structure tests passed.
 - The production build passed and produced `dist/index.html`.
-- 39 Playwright checks passed; one desktop-only project check was intentionally skipped in the mobile project.
-- Every one of the 16 commands in `.factory/claims.json` passed separately.
-- The focused delete-recovery and rendered target-size/spacing checks passed on desktop and mobile projects.
+- 40 Playwright checks passed.
+- Every one of the 16 commands in `.factory/claims.json` passed separately; no public claim is untested.
+- Fresh live Axe returned zero WCAG 2 A/AA violations across the route/mode matrix.
+- The focused delete-recovery and rendered target-size/spacing checks passed live at 390px.
 - JavaScript is 43.02 kB raw / 13.77 kB gzip. CSS is 24.60 kB raw / 6.10 kB gzip.
 - Production dependency audit: zero vulnerabilities.
 
-Local mobile Lighthouse: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 0.96s, TBT 72ms, CLS 0.
-
-Live mobile Lighthouse: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 1.02s, TBT 18ms, CLS 0.
+The prior live Lighthouse evidence remains 100/100/100/100. A fresh Lighthouse CLI session could not launch reliably in this verifier container; this is recorded accurately in `.factory/verification-3.md` and is not asserted as a fresh score.
 
 ## Cold live checks
 
-The existing production Static Web App `sf-backup-coverage-ledger` was reused and the clean `dist/` was deployed. All 17 public artifacts match the implementation build byte-for-byte. The deployment configuration remains non-public with HTTP 404.
+All 17 public artifacts match the implementation build byte-for-byte. The deployment configuration remains non-public with HTTP 404.
 
 Fresh 390×844 and 1440×900 Chromium contexts confirmed:
 
@@ -68,7 +68,7 @@ Evidence is in `.factory/evidence/repair-2-local/`, `.factory/evidence/repair-2-
 
 ## Historical disposition
 
-The complete verification and review history was reread before the repair. The clean test and live matrices retain the fixes for P1, P2, F-1-1 through F-1-47, F-2-1 through F-2-4, and F-4-1 through F-4-7. `.factory/repair-2.md` maps those groups to current evidence.
+The complete verification and review history was reread. The current report proves the disposition of P1–P2, F-1-1–F-1-47, F-2-1–F-2-4, F-4-1–F-4-7, and F-6-1–F-6-2 in `.factory/verification-3.md`.
 
 ## Known gaps and next steps
 
