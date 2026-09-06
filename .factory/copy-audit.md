@@ -1,4 +1,4 @@
-# Copy audit — polish round 4
+# Copy audit — repair 2
 
 Method: whitespace-delimited words containing letters or numbers. Hyphenated terms count as one word. This records every authored sentence visible on the landing route in its empty state, including dialog and import guidance; dynamic asset values are excluded.
 
@@ -6,7 +6,7 @@ Method: whitespace-delimited words containing letters or numbers. Hyphenated ter
 | ---: | --- | --- |
 | 6 | Track backup coverage and restore tests. | — |
 | 19 | For small IT teams that need one record of each critical asset, its backup, owner, and latest restore test. | — |
-| 5 | Opens an isolated sample ledger. | terminology regression |
+| 5 | Opens an isolated sample ledger. | terminology check |
 | 1 | Free. | `free` |
 | 6 | Works offline after the first visit. | `offline-reload` |
 | 4 | Stored in this browser. | `local-only` |
@@ -17,7 +17,7 @@ Method: whitespace-delimited words containing letters or numbers. Hyphenated ter
 | 3 | Keep secrets out. | — |
 | 5 | Records stay in this browser. | `local-only` |
 | 6 | Imports and exports run here too. | `local-only` |
-| 8 | Add the critical asset you would miss first. | terminology regression |
+| 8 | Add the critical asset you would miss first. | terminology check |
 | 10 | You can also import a CSV or flat YAML file. | `portable-import` |
 | 8 | Add its owner, backup target, and recovery location. | — |
 | 7 | Restore representative data in an isolated place. | — |
@@ -56,3 +56,5 @@ No audited sentence exceeds 22 words. No banned marketing word appears.
 | Try-out data | sample |
 
 `record` as a noun means one saved asset entry only. `Restore test` is the real action; `restore proof` is its dated ledger evidence. The visitor-copy regression checks `Record restore proof in three steps`, `Opens an isolated sample ledger.`, and README’s `one shared ledger.` wording.
+
+Repair 2 changes validation behavior, link hit areas, and the build label. It adds no visitor-facing product sentence, so this complete sentence list remains current.

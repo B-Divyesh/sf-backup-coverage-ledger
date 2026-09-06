@@ -1,0 +1,663 @@
+{
+  "implementationSha": "33b5d584640d166fae35c87df0f6f405a608cd32",
+  "checkedAt": "2026-09-06T03:39:28.675Z",
+  "phone": {
+    "title": "Backup Coverage Ledger — track restore tests",
+    "h1": "Track backup coverage and restore tests",
+    "audience": "For small IT teams that need one record of each critical asset, its backup, owner, and latest restore test.",
+    "primaryAction": "Try it with sample data",
+    "actionBottom": 517.9375,
+    "facts": [
+      "Free",
+      "Works offline after the first visit",
+      "Stored in this browser"
+    ],
+    "viewportHeight": 844,
+    "overflow": 0
+  },
+  "desktop": {
+    "title": "Backup Coverage Ledger — track restore tests",
+    "h1": "Track backup coverage and restore tests",
+    "audience": "For small IT teams that need one record of each critical asset, its backup, owner, and latest restore test.",
+    "primaryAction": "Try it with sample data",
+    "actionBottom": 666.03125,
+    "viewportHeight": 900,
+    "overflow": 0
+  },
+  "deleteRecovery": {
+    "wrongMessage": "Type Customer database exactly.",
+    "messageAfterCorrection": "",
+    "deletedAfterCorrection": true,
+    "undoRestored": true,
+    "reopenedClean": true
+  },
+  "demoIsolation": {
+    "banner": true,
+    "sampleAssets": [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "sampleStates": [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "editStayedInDemo": true,
+    "resetRestoredSample": true,
+    "startForRealShowsReal": true,
+    "demoKeyDiscarded": true
+  },
+  "touchTargets": {
+    "/": {
+      "minimumWidth": 44,
+      "minimumHeight": 44,
+      "undersized": [],
+      "targets": [
+        {
+          "label": "Backup Coverage Ledger home",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Ledger",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Demo",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Restore drill",
+          "width": 81.5,
+          "height": 56.09375
+        },
+        {
+          "label": "Privacy",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Try it with sample data",
+          "width": 350,
+          "height": 48
+        },
+        {
+          "label": "Read the privacy details",
+          "width": 230.4375,
+          "height": 44
+        },
+        {
+          "label": "Try it with sample data",
+          "width": 231.234375,
+          "height": 48
+        },
+        {
+          "label": "Privacy",
+          "width": 62.21875,
+          "height": 44
+        },
+        {
+          "label": "Terms",
+          "width": 49.015625,
+          "height": 44
+        },
+        {
+          "label": "Source on GitHub (external)",
+          "width": 194.234375,
+          "height": 44
+        }
+      ]
+    },
+    "/?demo=1": {
+      "minimumWidth": 44,
+      "minimumHeight": 44,
+      "undersized": [],
+      "targets": [
+        {
+          "label": "Backup Coverage Ledger home",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Ledger",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Demo",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Restore drill",
+          "width": 81.5,
+          "height": 56.09375
+        },
+        {
+          "label": "Privacy",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Privacy",
+          "width": 62.21875,
+          "height": 44
+        },
+        {
+          "label": "Terms",
+          "width": 49.015625,
+          "height": 44
+        },
+        {
+          "label": "Source on GitHub (external)",
+          "width": 194.234375,
+          "height": 44
+        }
+      ]
+    },
+    "/drill?demo=1": {
+      "minimumWidth": 44,
+      "minimumHeight": 44,
+      "undersized": [],
+      "targets": [
+        {
+          "label": "Backup Coverage Ledger home",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Ledger",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Demo",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Restore drill",
+          "width": 81.5,
+          "height": 56.09375
+        },
+        {
+          "label": "Privacy",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Back to ledger",
+          "width": 350,
+          "height": 48
+        },
+        {
+          "label": "Privacy",
+          "width": 62.21875,
+          "height": 44
+        },
+        {
+          "label": "Terms",
+          "width": 49.015625,
+          "height": 44
+        },
+        {
+          "label": "Source on GitHub (external)",
+          "width": 194.234375,
+          "height": 44
+        }
+      ]
+    },
+    "/privacy": {
+      "minimumWidth": 44,
+      "minimumHeight": 44,
+      "undersized": [],
+      "targets": [
+        {
+          "label": "Backup Coverage Ledger home",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Ledger",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Demo",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Restore drill",
+          "width": 81.5,
+          "height": 56.09375
+        },
+        {
+          "label": "Privacy",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Return to ledger",
+          "width": 172.421875,
+          "height": 48
+        },
+        {
+          "label": "Privacy",
+          "width": 62.21875,
+          "height": 44
+        },
+        {
+          "label": "Terms",
+          "width": 49.015625,
+          "height": 44
+        },
+        {
+          "label": "Source on GitHub (external)",
+          "width": 194.234375,
+          "height": 44
+        }
+      ]
+    },
+    "/privacy?demo=1": {
+      "minimumWidth": 44,
+      "minimumHeight": 44,
+      "undersized": [],
+      "targets": [
+        {
+          "label": "Backup Coverage Ledger home",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Ledger",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Demo",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Restore drill",
+          "width": 81.5,
+          "height": 56.09375
+        },
+        {
+          "label": "Privacy",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Return to ledger",
+          "width": 172.421875,
+          "height": 48
+        },
+        {
+          "label": "Privacy",
+          "width": 62.21875,
+          "height": 44
+        },
+        {
+          "label": "Terms",
+          "width": 49.015625,
+          "height": 44
+        },
+        {
+          "label": "Source on GitHub (external)",
+          "width": 194.234375,
+          "height": 44
+        }
+      ]
+    },
+    "/terms": {
+      "minimumWidth": 44,
+      "minimumHeight": 44,
+      "undersized": [],
+      "targets": [
+        {
+          "label": "Backup Coverage Ledger home",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Ledger",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Demo",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Restore drill",
+          "width": 81.5,
+          "height": 56.09375
+        },
+        {
+          "label": "Privacy",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Return to ledger",
+          "width": 172.421875,
+          "height": 48
+        },
+        {
+          "label": "Privacy",
+          "width": 62.21875,
+          "height": 44
+        },
+        {
+          "label": "Terms",
+          "width": 49.015625,
+          "height": 44
+        },
+        {
+          "label": "Source on GitHub (external)",
+          "width": 194.234375,
+          "height": 44
+        }
+      ]
+    },
+    "/terms?demo=1": {
+      "minimumWidth": 44,
+      "minimumHeight": 44,
+      "undersized": [],
+      "targets": [
+        {
+          "label": "Backup Coverage Ledger home",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Ledger",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Demo",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Restore drill",
+          "width": 81.5,
+          "height": 56.09375
+        },
+        {
+          "label": "Privacy",
+          "width": 81.5,
+          "height": 44
+        },
+        {
+          "label": "Return to ledger",
+          "width": 172.421875,
+          "height": 48
+        },
+        {
+          "label": "Privacy",
+          "width": 62.21875,
+          "height": 44
+        },
+        {
+          "label": "Terms",
+          "width": 49.015625,
+          "height": 44
+        },
+        {
+          "label": "Source on GitHub (external)",
+          "width": 194.234375,
+          "height": 44
+        }
+      ]
+    },
+    "/repair-2-missing": {
+      "minimumWidth": 44,
+      "minimumHeight": 44,
+      "undersized": [],
+      "targets": [
+        {
+          "label": "Backup Coverage Ledger home",
+          "width": 240.046875,
+          "height": 44
+        },
+        {
+          "label": "Ledger",
+          "width": 65.609375,
+          "height": 44
+        },
+        {
+          "label": "Demo",
+          "width": 46.40625,
+          "height": 44
+        },
+        {
+          "label": "Restore drill",
+          "width": 132.828125,
+          "height": 44
+        },
+        {
+          "label": "Privacy",
+          "width": 75.21875,
+          "height": 44
+        },
+        {
+          "label": "Return to the ledger",
+          "width": 230.03125,
+          "height": 48.796875
+        },
+        {
+          "label": "Privacy",
+          "width": 54.21875,
+          "height": 44
+        },
+        {
+          "label": "Terms",
+          "width": 44,
+          "height": 44
+        },
+        {
+          "label": "Source on GitHub (external)",
+          "width": 186.234375,
+          "height": 44
+        }
+      ]
+    }
+  },
+  "routes": {
+    "/": {
+      "status": 200,
+      "title": "Backup Coverage Ledger — track restore tests",
+      "h1": "Track backup coverage and restore tests",
+      "h1Count": 1,
+      "mainCount": 1,
+      "lang": "en",
+      "overflow": 0,
+      "demoBanner": false
+    },
+    "/?demo=1": {
+      "status": 200,
+      "title": "Demo — Backup Coverage Ledger",
+      "h1": "Review a sample backup ledger",
+      "h1Count": 1,
+      "mainCount": 1,
+      "lang": "en",
+      "overflow": 0,
+      "demoBanner": true
+    },
+    "/drill?demo=1": {
+      "status": 200,
+      "title": "Restore drill — Backup Coverage Ledger",
+      "h1": "Run a restore drill",
+      "h1Count": 1,
+      "mainCount": 1,
+      "lang": "en",
+      "overflow": 0,
+      "demoBanner": true
+    },
+    "/privacy": {
+      "status": 200,
+      "title": "Privacy — Backup Coverage Ledger",
+      "h1": "Privacy",
+      "h1Count": 1,
+      "mainCount": 1,
+      "lang": "en",
+      "overflow": 0,
+      "demoBanner": false
+    },
+    "/privacy?demo=1": {
+      "status": 200,
+      "title": "Privacy — Backup Coverage Ledger",
+      "h1": "Privacy",
+      "h1Count": 1,
+      "mainCount": 1,
+      "lang": "en",
+      "overflow": 0,
+      "demoBanner": true
+    },
+    "/terms": {
+      "status": 200,
+      "title": "Terms — Backup Coverage Ledger",
+      "h1": "Terms of use",
+      "h1Count": 1,
+      "mainCount": 1,
+      "lang": "en",
+      "overflow": 0,
+      "demoBanner": false
+    },
+    "/terms?demo=1": {
+      "status": 200,
+      "title": "Terms — Backup Coverage Ledger",
+      "h1": "Terms of use",
+      "h1Count": 1,
+      "mainCount": 1,
+      "lang": "en",
+      "overflow": 0,
+      "demoBanner": true
+    },
+    "/repair-2-missing": {
+      "status": 404,
+      "title": "Page not found — Backup Coverage Ledger",
+      "h1": "That ledger page is missing",
+      "h1Count": 1,
+      "mainCount": 1,
+      "lang": "en",
+      "overflow": 0,
+      "demoBanner": false
+    }
+  },
+  "accessibility": {
+    "/": [],
+    "/?demo=1": [],
+    "/drill?demo=1": [],
+    "/privacy": [],
+    "/privacy?demo=1": [],
+    "/terms": [],
+    "/terms?demo=1": [],
+    "/repair-2-missing": []
+  },
+  "keyboard": {
+    "firstFocus": "Skip to main content",
+    "routeFocus": "Privacy",
+    "announcement": "Privacy page loaded",
+    "backFocus": "Track backup coverage and restore tests"
+  },
+  "reducedMotion": {
+    "matches": true,
+    "durations": [
+      "1e-05s"
+    ],
+    "infiniteAnimations": 0
+  },
+  "textResize": {
+    "/": {
+      "overflow": 0,
+      "h1Visible": true
+    },
+    "/?demo=1": {
+      "overflow": 0,
+      "h1Visible": true
+    },
+    "/privacy": {
+      "overflow": 0,
+      "h1Visible": true
+    }
+  },
+  "print": {
+    "called": true,
+    "checklistCount": 5,
+    "headerDisplay": "none",
+    "overflow": 0
+  },
+  "offline": {
+    "registrationUpdated": true,
+    "controlled": true,
+    "populated": true,
+    "label": "Local · offline"
+  },
+  "links": {
+    "internal": [
+      {
+        "href": "https://backup-coverage-ledger.sociobot.in/",
+        "status": 200
+      },
+      {
+        "href": "https://backup-coverage-ledger.sociobot.in/?demo=1",
+        "status": 200
+      },
+      {
+        "href": "https://backup-coverage-ledger.sociobot.in/drill",
+        "status": 200
+      },
+      {
+        "href": "https://backup-coverage-ledger.sociobot.in/privacy",
+        "status": 200
+      },
+      {
+        "href": "https://backup-coverage-ledger.sociobot.in/terms",
+        "status": 200
+      },
+      {
+        "href": "https://backup-coverage-ledger.sociobot.in/drill?demo=1",
+        "status": 200
+      },
+      {
+        "href": "https://backup-coverage-ledger.sociobot.in/privacy?demo=1",
+        "status": 200
+      },
+      {
+        "href": "https://backup-coverage-ledger.sociobot.in/terms?demo=1",
+        "status": 200
+      }
+    ],
+    "external": [
+      {
+        "href": "https://github.com/B-Divyesh/sf-backup-coverage-ledger",
+        "status": 200
+      }
+    ],
+    "intentionalMail": [
+      "mailto:privacy@sociobot.in",
+      "mailto:hello@sociobot.in"
+    ]
+  },
+  "requests": {
+    "total": 32,
+    "origins": [
+      "https://backup-coverage-ledger.sociobot.in"
+    ],
+    "external": []
+  },
+  "unexpectedErrors": []
+}
