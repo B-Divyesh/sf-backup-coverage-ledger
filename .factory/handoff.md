@@ -1,28 +1,24 @@
-# Handoff — verification 3
+# Handoff — review 7
 
-Work order: `backup-coverage-ledger-verify-3`
+Work order: `backup-coverage-ledger-review-7`
 
 Live product: <https://backup-coverage-ledger.sociobot.in>
 
 Implementation SHA: `38dfb4c1b9a5abc47b8f066322e04a089a087941`
 
-Documentation reviewed: `80a42000f1c2bcb7c6644f0997900605ceb2ac1e`
+Documentation baseline: `6ac3a9950e5bc30613ae20dacd66c54005f5e1b4`
 
 Implementation release: `v1.1.4 · repair-2`
 
 ## Result
 
-**PASS — independent QA found 0 findings and 0 untested claims.**
+**PASS — 0 findings and 0 untested claims.**
 
-- The deployed product was independently compared with implementation `38dfb4c`: all 17 public artifacts match byte-for-byte. `80a4200` is documentation-only.
-- Fresh phone and desktop loads name the job, small-IT audience, and **Try it with sample data** action before scrolling. The one-click demo is isolated, resets, and discards without changing a pre-seeded real record.
-- Live delete typo correction/close-reopen recovery, Undo, offline reload, keyboard/focus behavior, reduced motion, legal routes, links, designed 404, and mobile target geometry passed.
-
-The repair keeps all existing ledger, demo, file, print, offline, privacy, and route behavior. It adds no account, backend, analytics, payment, or external model dependency.
+No product code was changed. Fresh phone and desktop browsers confirmed the job, audience, and one-click sample action before scrolling. The five-record demo is populated, persistently labelled, resettable, and isolated from a seeded real ledger. Live invalid input, delete recovery, Undo, corrupt-storage recovery, keyboard and focus behavior, reduced motion, 200% text, legal routes, privacy controls, links, offline reload, service-worker update, and the designed 404 passed.
 
 ## Verification
 
-The documented clean setup ran after `npm ci --include=dev` from a clean checkout:
+From a clean checkout:
 
 ```sh
 npm ci --include=dev
@@ -34,42 +30,23 @@ Results:
 
 - 23 unit and structure tests passed.
 - The production build passed and produced `dist/index.html`.
-- 40 Playwright checks passed.
-- Every one of the 16 commands in `.factory/claims.json` passed separately; no public claim is untested.
-- Fresh live Axe returned zero WCAG 2 A/AA violations across the route/mode matrix.
-- The focused delete-recovery and rendered target-size/spacing checks passed live at 390px.
+- Playwright completed 39 passes and one intended project-only skip across 40 cases.
+- All 16 commands in `.factory/claims.json` passed separately.
+- Production dependency audit reported zero vulnerabilities.
 - JavaScript is 43.02 kB raw / 13.77 kB gzip. CSS is 24.60 kB raw / 6.10 kB gzip.
-- Production dependency audit: zero vulnerabilities.
+- Fresh Lighthouse scored 100 Performance, 100 Accessibility, 100 Best Practices, and 100 SEO. LCP was 1.13 s, TBT 83 ms, and CLS 0.
 
-The prior live Lighthouse evidence remains 100/100/100/100. A fresh Lighthouse CLI session could not launch reliably in this verifier container; this is recorded accurately in `.factory/verification-3.md` and is not asserted as a fresh score.
+## Live result
 
-## Cold live checks
+- All 17 public artifacts match implementation `38dfb4c` byte-for-byte. Later commits `80a4200` and `6ac3a99` change documentation or evidence only.
+- Live Axe returned zero WCAG 2 A/AA violations across demo, drill, legal, 404, dialog, and dark states.
+- Product requests remained same-origin and no unexpected console error occurred.
+- The deployed service worker controlled the product, updated successfully, and reloaded a populated demo offline.
+- The deliberate unknown route returned HTTP 404 with the designed recovery page.
+- Earlier findings P1–P2, F-1-1–F-1-47, F-2-1–F-2-4, F-4-1–F-4-7, and F-6-1–F-6-2 were inspected and proved fixed.
 
-All 17 public artifacts match the implementation build byte-for-byte. The deployment configuration remains non-public with HTTP 404.
-
-Fresh 390×844 and 1440×900 Chromium contexts confirmed:
-
-- The first screen names the job, small-IT audience, and **Try it with sample data** action before scrolling.
-- The demo shows five realistic assets and five expected proof/gap states.
-- Demo edit, reset, and discard never alter a pre-seeded real ledger.
-- Wrong delete confirmation recovers after editing or closing; delete and Undo then succeed.
-- Every measured standalone navigation link is at least 44×44 CSS pixels. Adjacent navigation targets are at least 8px apart.
-- Home, demo, drill, Privacy, Terms, demo legal routes, and the intentional 404 have one `h1`, one `main`, `lang=en`, their expected titles, and no horizontal overflow.
-- Live Axe WCAG 2 A/AA reports zero violations across all checked routes.
-- Skip-link focus, route focus and announcement, and Back focus pass.
-- 200% text size has no horizontal overflow on home, demo, or Privacy.
-- Reduced motion leaves no infinite animation and limits durations to 0.01ms.
-- Print invokes the browser print path, keeps five checklists, hides page chrome, and has no overflow.
-- The service worker updates and reloads the populated demo offline.
-- Product traffic remains same-origin. Internal links and the labelled source link return 200; mail links are intentional.
-- The designed missing route returns HTTP 404. Its browser network message is expected and is not an application defect.
-
-Evidence is in `.factory/evidence/repair-2-local/`, `.factory/evidence/repair-2-live/`, and `/work/.evidence/repair-2/`.
-
-## Historical disposition
-
-The complete verification and review history was reread. The current report proves the disposition of P1–P2, F-1-1–F-1-47, F-2-1–F-2-4, F-4-1–F-4-7, and F-6-1–F-6-2 in `.factory/verification-3.md`.
+The full evidence and historical disposition are in `.factory/review-7.md`. Runtime evidence is in `/work/.evidence/review-7/`.
 
 ## Known gaps and next steps
 
-No known product or verification gap remains. This is a static, local-first product, so backend tenant, health, restart-persistence, rate-limit, and billing checks do not apply.
+None. Backend, billing, CLI, library, and desktop checks do not apply to this static local-first product.
