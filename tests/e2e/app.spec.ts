@@ -122,7 +122,7 @@ test('delete confirmation recovers after correction and after closing the dialog
   await expect(page.getByRole('article').filter({ hasText: 'Customer database' })).toBeVisible();
 });
 
-test('standalone navigation links meet the 44px phone touch-target baseline', async ({ page }) => {
+test('standalone navigation links meet phone target size and spacing baselines', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   for (const route of ['/', '/?demo=1', '/privacy', '/terms', '/404.html']) {
     await page.goto(route);
@@ -137,6 +137,20 @@ test('standalone navigation links meet the 44px phone touch-target baseline', as
       })
       .filter(({ width, height }) => width < 44 || height < 44));
     expect(undersized, `${route} has undersized navigation links`).toEqual([]);
+    const crowded = await page.locator('header nav, footer nav').evaluateAll((navs) => navs.flatMap((nav) => {
+      const links = [...nav.querySelectorAll('a')].filter((link) => {
+        const style = getComputedStyle(link);
+        return style.display !== 'none' && style.visibility !== 'hidden';
+      });
+      return links.slice(0, -1).map((previousLink, index) => {
+        const link = links[index + 1]!;
+        const previous = previousLink.getBoundingClientRect();
+        const current = link.getBoundingClientRect();
+        const sameRow = Math.min(previous.bottom, current.bottom) > Math.max(previous.top, current.top);
+        return { labels: `${previousLink.textContent?.trim()} → ${link.textContent?.trim()}`, gap: sameRow ? current.left - previous.right : current.top - previous.bottom };
+      });
+    }).filter(({ gap }) => gap < 7.5));
+    expect(crowded, `${route} has navigation links spaced under 8px apart`).toEqual([]);
   }
 });
 
