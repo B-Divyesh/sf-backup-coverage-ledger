@@ -2,7 +2,7 @@
 
 - Date: 2026-09-06
 - Work order: `backup-coverage-ledger-repair-2`
-- Implementation: `33b5d584640d166fae35c87df0f6f405a608cd32`
+- Implementation: `38dfb4c1b9a5abc47b8f066322e04a089a087941`
 - Live URL: <https://backup-coverage-ledger.sociobot.in>
 
 ## Verdict
@@ -14,7 +14,7 @@
 | Finding | Root-cause repair | Outcome evidence | Live result |
 | --- | --- | --- | --- |
 | F-6-1 | Clear delete-field custom validity on input and on each dialog open. Associate the exact-name help with the field. | `tests/e2e/app.spec.ts` runs wrong → correct → delete → Undo, then wrong → close → reopen → delete → Undo. | The error changed from `Type Customer database exactly.` to empty after correction. Delete, Undo, and clean reopen all returned `true`. |
-| F-6-2 | Give the app wordmark, informational/legal links, footer links, and static-404 navigation a 44px minimum hit area. | The browser test measures computed bounds at 390px on home, demo, Privacy, Terms, and static 404. | Home, demo, drill, both legal modes, and the true 404 had zero undersized targets; each route's minimum was 44×44 CSS pixels. |
+| F-6-2 | Give the app wordmark, informational/legal links, footer links, and static-404 navigation a 44px minimum hit area with 8px separation. | The browser test measures computed bounds and adjacent gaps at 390px on home, demo, Privacy, Terms, and static 404. | Home, demo, legal routes, and the true 404 had zero undersized or crowded targets; each route's minimum was 44×44 pixels with an 8px gap. |
 
 ## First screen and demo
 
@@ -54,7 +54,7 @@ From a detached clean checkout:
 
 ## Live verification
 
-- All 17 public files match the clean build byte-for-byte. `staticwebapp.config.json` returns 404 as intended.
+- All 17 public files from implementation `38dfb4c` match the clean build byte-for-byte. `staticwebapp.config.json` returns 404 as intended.
 - Home/demo/drill/legal/demo-legal routes return 200. The deliberate missing route returns 404 with the designed page.
 - Live Axe: zero WCAG 2 A/AA violations on eight checked route/mode combinations.
 - Keyboard skip, route focus/announcement, and Back focus pass.

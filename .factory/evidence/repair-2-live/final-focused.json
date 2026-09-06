@@ -1,0 +1,53 @@
+{
+  "implementationSha": "38dfb4c1b9a5abc47b8f066322e04a089a087941",
+  "checkedAt": "2026-09-06T03:50:07.767Z",
+  "routes": {
+    "/": {
+      "status": 200,
+      "minimumWidth": 44,
+      "minimumHeight": 44,
+      "minimumGap": 8,
+      "undersized": [],
+      "crowded": []
+    },
+    "/?demo=1": {
+      "status": 200,
+      "minimumWidth": 44,
+      "minimumHeight": 44,
+      "minimumGap": 8,
+      "undersized": [],
+      "crowded": []
+    },
+    "/privacy": {
+      "status": 200,
+      "minimumWidth": 44,
+      "minimumHeight": 44,
+      "minimumGap": 8,
+      "undersized": [],
+      "crowded": []
+    },
+    "/terms": {
+      "status": 200,
+      "minimumWidth": 44,
+      "minimumHeight": 44,
+      "minimumGap": 8,
+      "undersized": [],
+      "crowded": []
+    },
+    "/repair-2-final-missing": {
+      "status": 404,
+      "minimumWidth": 44,
+      "minimumHeight": 44,
+      "minimumGap": 8,
+      "undersized": [],
+      "crowded": []
+    }
+  },
+  "deleteRecovery": {
+    "wrongMessage": "Type Customer database exactly.",
+    "correctedMessage": "",
+    "deleted": true,
+    "undoRestored": true
+  },
+  "unexpectedErrors": []
+}

@@ -4,7 +4,9 @@ Work order: `backup-coverage-ledger-repair-2`
 
 Live product: <https://backup-coverage-ledger.sociobot.in>
 
-Implementation SHA: `33b5d584640d166fae35c87df0f6f405a608cd32`
+Implementation SHA: `38dfb4c1b9a5abc47b8f066322e04a089a087941`
+
+Documentation SHA: the final report commit containing this handoff; the exact pushed SHA is also written to `/work/.evidence/repair-2/shas.json`.
 
 Implementation release: `v1.1.4 · repair-2`
 
@@ -13,7 +15,7 @@ Implementation release: `v1.1.4 · repair-2`
 **PASS — both review-6 findings are fixed, and no known finding remains.**
 
 - Delete confirmation now clears its custom validation error when the operator edits the value and whenever the dialog opens. Wrong name → correct name → delete → Undo works without a reload. Closing after an error and reopening also starts with a valid empty field.
-- The wordmark, informational link, legal/footer links, and static-404 navigation now provide hit areas of at least 44×44 CSS pixels. A browser regression measures rendered bounds at 390px across normal, demo, legal, and 404 pages.
+- The wordmark, informational link, legal/footer links, and static-404 navigation now provide hit areas of at least 44×44 CSS pixels with at least 8px between adjacent navigation targets. A browser regression measures rendered geometry at 390px across normal, demo, legal, and 404 pages.
 
 The repair keeps all existing ledger, demo, file, print, offline, privacy, and route behavior. It adds no account, backend, analytics, payment, or external model dependency.
 
@@ -33,7 +35,7 @@ Results:
 - The production build passed and produced `dist/index.html`.
 - 39 Playwright checks passed; one desktop-only project check was intentionally skipped in the mobile project.
 - Every one of the 16 commands in `.factory/claims.json` passed separately.
-- The focused delete-recovery and 44px rendered-bounds checks passed on desktop and mobile projects.
+- The focused delete-recovery and rendered target-size/spacing checks passed on desktop and mobile projects.
 - JavaScript is 43.02 kB raw / 13.77 kB gzip. CSS is 24.60 kB raw / 6.10 kB gzip.
 - Production dependency audit: zero vulnerabilities.
 
@@ -51,7 +53,7 @@ Fresh 390×844 and 1440×900 Chromium contexts confirmed:
 - The demo shows five realistic assets and five expected proof/gap states.
 - Demo edit, reset, and discard never alter a pre-seeded real ledger.
 - Wrong delete confirmation recovers after editing or closing; delete and Undo then succeed.
-- Every measured standalone navigation link is at least 44×44 CSS pixels. The minimum on every checked route is exactly 44×44.
+- Every measured standalone navigation link is at least 44×44 CSS pixels. Adjacent navigation targets are at least 8px apart.
 - Home, demo, drill, Privacy, Terms, demo legal routes, and the intentional 404 have one `h1`, one `main`, `lang=en`, their expected titles, and no horizontal overflow.
 - Live Axe WCAG 2 A/AA reports zero violations across all checked routes.
 - Skip-link focus, route focus and announcement, and Back focus pass.
