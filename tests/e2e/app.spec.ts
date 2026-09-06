@@ -91,6 +91,55 @@ test('keyboard dialog flow traps focus, closes with Escape, and restores its tri
   await expect(trigger).toBeFocused();
 });
 
+test('delete confirmation recovers after correction and after closing the dialog', async ({ page }) => {
+  await page.goto('/?demo=1');
+  const record = page.getByRole('article').filter({ hasText: 'Customer database' });
+
+  await record.getByRole('button', { name: 'Delete Customer database' }).click();
+  const confirmation = page.getByLabel('Asset name *');
+  await confirmation.fill('wrong name');
+  await page.getByRole('button', { name: 'Delete asset' }).click();
+  await expect(confirmation).toHaveJSProperty('validationMessage', 'Type Customer database exactly.');
+  await confirmation.fill('Customer database');
+  await expect(confirmation).toHaveJSProperty('validationMessage', '');
+  await page.getByRole('button', { name: 'Delete asset' }).click();
+  await expect(page.getByRole('article').filter({ hasText: 'Customer database' })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Undo' }).click();
+  await expect(page.getByRole('article').filter({ hasText: 'Customer database' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Delete Customer database' }).click();
+  await page.getByLabel('Asset name *').fill('another wrong name');
+  await page.getByRole('button', { name: 'Delete asset' }).click();
+  await page.getByRole('button', { name: 'Close dialog' }).click();
+  await page.getByRole('button', { name: 'Delete Customer database' }).click();
+  const reopenedConfirmation = page.getByLabel('Asset name *');
+  await expect(reopenedConfirmation).toHaveValue('');
+  expect(await reopenedConfirmation.evaluate((input: HTMLInputElement) => input.validity.customError)).toBe(false);
+  await reopenedConfirmation.fill('Customer database');
+  await page.getByRole('button', { name: 'Delete asset' }).click();
+  await expect(page.getByRole('article').filter({ hasText: 'Customer database' })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Undo' }).click();
+  await expect(page.getByRole('article').filter({ hasText: 'Customer database' })).toBeVisible();
+});
+
+test('standalone navigation links meet the 44px phone touch-target baseline', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const route of ['/', '/?demo=1', '/privacy', '/terms', '/404.html']) {
+    await page.goto(route);
+    const undersized = await page.locator('header a, main a:not([href^="mailto:"]), footer a').evaluateAll((links) => links
+      .filter((link) => {
+        const style = getComputedStyle(link);
+        return style.display !== 'none' && style.visibility !== 'hidden';
+      })
+      .map((link) => {
+        const bounds = link.getBoundingClientRect();
+        return { label: link.getAttribute('aria-label') || link.textContent?.trim() || '', width: bounds.width, height: bounds.height };
+      })
+      .filter(({ width, height }) => width < 44 || height < 44));
+    expect(undersized, `${route} has undersized navigation links`).toEqual([]);
+  }
+});
+
 test('calculates the 30-day goal from critical assets only and names the no-critical state', async ({ page }) => {
   const today = new Date().toISOString().slice(0, 10);
   const csv = [

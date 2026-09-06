@@ -8,7 +8,7 @@ import type { CoverageStatus, ImportResult, LedgerRecord, LedgerState } from './
 const REAL_STORAGE_KEY = 'backup-coverage-ledger:v1';
 const DEMO_STORAGE_KEY = 'demo:backup-coverage-ledger:v1';
 const THEME_KEY = 'backup-coverage-ledger:theme';
-const BUILD_ID = 'v1.1.3 · polish-4';
+const BUILD_ID = 'v1.1.4 · repair-2';
 const ORIGIN = 'https://backup-coverage-ledger.sociobot.in';
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
@@ -181,7 +181,7 @@ function dialogs(): string {
   return `<dialog id="asset-dialog" class="sheet"><form id="asset-form" method="dialog"><div class="dialog-head"><div><p class="section-index">Asset record</p><h2 id="asset-dialog-title">Add asset</h2></div><button class="dialog-close" type="button" value="cancel" aria-label="Close dialog">×</button></div><p class="form-note"><strong>Required fields are marked *</strong>. Describe paths, not credentials.</p><input type="hidden" name="id"><div class="form-grid">${field('asset', 'Asset', true, 'Production PostgreSQL')}${field('owner', 'Accountable owner', true, 'Name or team')}<label><span>Criticality *</span><select name="criticality" required><option value="critical">Critical</option><option value="important">Important</option><option value="routine">Routine</option></select></label>${field('backupTarget', 'Backup target', true, 'e.g. Restic repository')}${field('recoveryLocation', 'Recovery location', true, 'e.g. Operations runbook §4')}${field('retention', 'Retention policy', false, 'e.g. 30 daily, 12 monthly')}<label class="span-2"><span>Restore steps *</span><textarea name="extractionMethod" rows="3" required placeholder="Commands or procedure reference—no passwords"></textarea></label><label><span>Last restore proof</span><input name="lastProofDate" type="date" max="${todayIso()}"></label><label><span>Proof interval (days) *</span><input name="proofCadenceDays" type="number" min="1" max="3650" value="30" required><small>Proof expires after this many days.</small></label><label class="span-2"><span>Proof notes</span><textarea name="proofNotes" rows="2" placeholder="What was restored and checked?"></textarea></label></div><div class="dialog-actions"><button class="button button--quiet" type="button" value="cancel">Cancel</button><button class="button button--primary" type="submit">Save asset</button></div></form></dialog>
   <dialog id="proof-dialog" class="sheet sheet--small"><form id="proof-form" method="dialog"><div class="dialog-head"><div><p class="section-index">Restore proof</p><h2 id="proof-dialog-title">Record restore proof</h2></div><button class="dialog-close" type="button" value="cancel" aria-label="Close dialog">×</button></div><p class="form-note">Only record this after someone restores and opens representative data. A ledger entry alone is not proof.</p><input type="hidden" name="id"><label><span>Proof date *</span><input name="proofDate" type="date" required max="${todayIso()}"></label><label><span>What was restored and checked? *</span><textarea name="proofNotes" rows="4" required></textarea></label><div class="dialog-actions"><button class="button button--quiet" type="button" value="cancel">Cancel</button><button class="button button--primary" type="submit">Record proof</button></div></form></dialog>
   <dialog id="import-dialog" class="sheet sheet--small"><form id="import-form" method="dialog"><div class="dialog-head"><div><p class="section-index">Import comparison</p><h2>Review file changes</h2></div><button class="dialog-close" type="button" value="cancel" aria-label="Close dialog">×</button></div><div id="import-preview"></div><div class="dialog-actions"><button class="button button--quiet" type="button" value="cancel">Cancel</button><button class="button button--quiet" type="button" id="replace-import">Replace ledger</button><button class="button button--primary" type="submit">Merge file</button></div></form></dialog>
-  <dialog id="delete-dialog" class="sheet sheet--small"><form id="delete-form" method="dialog"><div class="dialog-head"><div><p class="section-index">Delete asset</p><h2 id="delete-title">Confirm deletion</h2></div><button class="dialog-close" type="button" value="cancel" aria-label="Close dialog">×</button></div><p>Type the asset name to remove it from this browser.</p><input type="hidden" name="id"><label><span>Asset name *</span><input name="confirmation" required autocomplete="off"><small id="delete-help"></small></label><div class="dialog-actions"><button class="button button--quiet" type="button" value="cancel">Cancel</button><button class="button button--danger" type="submit">Delete asset</button></div></form></dialog>`;
+  <dialog id="delete-dialog" class="sheet sheet--small"><form id="delete-form" method="dialog"><div class="dialog-head"><div><p class="section-index">Delete asset</p><h2 id="delete-title">Confirm deletion</h2></div><button class="dialog-close" type="button" value="cancel" aria-label="Close dialog">×</button></div><p>Type the asset name to remove it from this browser.</p><input type="hidden" name="id"><label><span>Asset name *</span><input name="confirmation" required autocomplete="off" aria-describedby="delete-help"><small id="delete-help"></small></label><div class="dialog-actions"><button class="button button--quiet" type="button" value="cancel">Cancel</button><button class="button button--danger" type="submit">Delete asset</button></div></form></dialog>`;
 }
 
 function field(name: string, label: string, required: boolean, placeholder: string): string {
@@ -203,6 +203,9 @@ function bindLedger(): void {
   app.querySelector<HTMLFormElement>('#import-form')!.addEventListener('submit', applyMergedImport);
   app.querySelector('#replace-import')!.addEventListener('click', replaceImport);
   app.querySelector<HTMLFormElement>('#delete-form')!.addEventListener('submit', confirmDelete);
+  app.querySelector<HTMLInputElement>('#delete-form [name="confirmation"]')!.addEventListener('input', (event) => {
+    (event.currentTarget as HTMLInputElement).setCustomValidity('');
+  });
   app.querySelectorAll<HTMLDialogElement>('dialog').forEach(bindDialogClose);
 }
 
@@ -251,9 +254,11 @@ function saveProofForm(event: SubmitEvent): void {
 
 function openDeleteDialog(id: string, source: HTMLElement): void {
   const record = records.find((item) => item.id === id); if (!record) return; returnFocus = source;
-  const form = app.querySelector<HTMLFormElement>('#delete-form')!; form.reset(); (form.elements.namedItem('id') as HTMLInputElement).value = id;
+  const form = app.querySelector<HTMLFormElement>('#delete-form')!; form.reset();
+  const confirmation = form.elements.namedItem('confirmation') as HTMLInputElement; confirmation.setCustomValidity('');
+  (form.elements.namedItem('id') as HTMLInputElement).value = id;
   app.querySelector('#delete-title')!.textContent = `Delete ${record.asset}?`; app.querySelector('#delete-help')!.textContent = `Type “${record.asset}” exactly.`;
-  app.querySelector<HTMLDialogElement>('#delete-dialog')!.showModal(); (form.elements.namedItem('confirmation') as HTMLInputElement).focus();
+  app.querySelector<HTMLDialogElement>('#delete-dialog')!.showModal(); confirmation.focus();
 }
 
 function confirmDelete(event: SubmitEvent): void {

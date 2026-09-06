@@ -34,7 +34,7 @@ describe('release structure', () => {
       expect(staticPage).toContain(label);
       expect(application).toContain(label);
     }
-    expect(staticPage).toContain('v1.1.3 · polish-4');
+    expect(staticPage).toContain('v1.1.4 · repair-2');
   });
 
   it('lists every route and supplies complete base metadata', () => {

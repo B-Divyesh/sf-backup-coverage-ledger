@@ -1,4 +1,4 @@
-const CACHE = 'bcl-shell-v5';
+const CACHE = 'bcl-shell-v6';
 const SHELL = ['/404.html', '/404.css', '/assets/proof-lattice-480.webp'];
 
 self.addEventListener('install', (event) => {
